@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerShip : MonoBehaviour
 {
     private Vector3 velocity = Vector3.zero;
-    private float angle = 0.0f;
     //private float drag = 0.1f;
     //private Rigidbody2D rigidBody;
 
@@ -31,27 +30,18 @@ public class PlayerShip : MonoBehaviour
     private void FixedUpdate()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        float angle = -5.0f * horizontalInput;
-        this.transform.Rotate(0.0f, 0.0f, angle, Space.Self);
+        float rotationAngle = -5.0f * horizontalInput;
+        this.transform.Rotate(0.0f, 0.0f, rotationAngle, Space.Self);
 
         float verticalInput = Input.GetAxis("Vertical");
-        //float thrust = 0.01f * verticalInput;
-        //velocity += thrust * this.transform.up;
-
-        /*
-        float f = 0.01f * verticalInput;
-        float m = 1.0f;
-        float a = f / m;
-        velocity += a * this.transform.up;
-        */
-
         float mass = 1.0f;
-        float dt = Time.fixedDeltaTime;
+        float deltaTime = Time.fixedDeltaTime;
         Vector3 thrust = 0.5f * verticalInput * this.transform.up;
         Vector3 friction = -0.2f * velocity;
         Vector3 force = thrust + friction;
         Vector3 acceleration = force / mass;
-        velocity += acceleration * dt;
+        Vector3 deltaVelocity = acceleration * deltaTime;
+        velocity += deltaVelocity;
         this.transform.position += velocity;
     }
 }

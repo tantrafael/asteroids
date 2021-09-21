@@ -11,7 +11,6 @@ namespace Asteroids
 			DontDestroyOnLoad(this.gameObject);
 
 			// Initialize game.
-			Debug.Log(Camera.main.pixelWidth);
 		}
 
 		private void OnDestroy()
