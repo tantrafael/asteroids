@@ -6,28 +6,28 @@ using UnityEngine.TestTools;
 
 public class TestSuite
 {
-    private GameObject gameManager;
-    //private GameManager gameManagerScript;
+    private GameManager gameManager;
 
     [SetUp]
     public void Setup()
     {
         GameObject gameManagerPrefab = Resources.Load<GameObject>("Prefabs/GameManager");
-        gameManager = MonoBehaviour.Instantiate(gameManagerPrefab);
-        //GameManager gameManagerScript = gameManagerObject.GetComponent<GameManager>();
+        GameObject gameManagerInstance = MonoBehaviour.Instantiate(gameManagerPrefab);
+        gameManager = gameManagerInstance.GetComponent<GameManager>();
     }
 
     [TearDown]
     public void Teardown()
     {
-        Object.Destroy(gameManager);
+        Object.Destroy(gameManager.gameObject);
     }
 
-    /*
     [UnityTest]
-    public IEnumerator PlayerShipTurnsLeft()
+    public IEnumerator PlayerShipSpawns()
     {
+        PlayerShip playerShip = gameManager.SpawnPlayerShip();
+        UnityEngine.Assertions.Assert.IsNotNull(playerShip);
+
         yield return null;
     }
-    */
 }
