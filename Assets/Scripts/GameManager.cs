@@ -2,20 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Asteroids
+public class GameManager : MonoBehaviour
 {
-	public class GameManager : MonoBehaviour
+	public GameObject playerShipPrefab;
+	private GameObject playerShipInstance;
+
+	private void Awake()
 	{
-		private void Awake()
-		{
-			DontDestroyOnLoad(this.gameObject);
+		DontDestroyOnLoad(this.gameObject);
+		InitializeGame();
+	}
 
-			// Initialize game.
-		}
+	private void OnDestroy()
+	{
+		DecommissionGame();
+	}
 
-		private void OnDestroy()
-		{
-			// Decommission game.
-		}
+	private void InitializeGame()
+	{
+		playerShipInstance = Instantiate(playerShipPrefab, Vector3.zero, Quaternion.identity);
+	}
+
+	private void DecommissionGame()
+	{
+		Object.Destroy(playerShipInstance);
 	}
 }
