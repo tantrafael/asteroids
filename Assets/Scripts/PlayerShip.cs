@@ -4,35 +4,50 @@ using UnityEngine;
 
 public class PlayerShip : MonoBehaviour
 {
-    private Vector3 velocity = Vector3.zero;
+	// Rotation
+	public float momentOfInertia;
+	public float angularDrag;
+	public float rotationInputCoefficient;
 
-    private void Awake()
-    {
-    }
+	// Translation
+	public float mass;
+	public float drag;
+	public float thrustInputCoefficient;
 
-    private void Update()
-    {
-        // Handle laser input.
-        // Handle hyper space input.
-    }
+	private RotatingBody rotatingBody;
+	private TranslatingMass translatingMass;
 
-    private void FixedUpdate()
-    {
-        // Handle rotation input.
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float rotationAngle = -5.0f * horizontalInput;
-        this.transform.Rotate(0.0f, 0.0f, rotationAngle, Space.Self);
+	private void Awake()
+	{
+		this.rotatingBody = this.gameObject.AddComponent<RotatingBody>();
+		this.rotatingBody.Initialize(momentOfInertia, angularDrag);
 
-        // Handle thrust input.
-        float verticalInput = Input.GetAxis("Vertical");
-        float mass = 1.0f;
-        float deltaTime = Time.fixedDeltaTime;
-        Vector3 thrust = 0.5f * verticalInput * this.transform.up;
-        Vector3 friction = -0.2f * velocity;
-        Vector3 force = thrust + friction;
-        Vector3 acceleration = force / mass;
-        Vector3 deltaVelocity = acceleration * deltaTime;
-        velocity += deltaVelocity;
-        this.transform.position += velocity;
-    }
+		this.translatingMass = this.gameObject.AddComponent<TranslatingMass>();
+		this.translatingMass.Initialize(mass, drag);
+
+		this.gameObject.AddComponent<ScreenWrapper>();
+	}
+
+	private void Update()
+	{
+		// Handle rotation input.
+		float horizontalInput = Input.GetAxis("Horizontal");
+		float rotationMagnitude = -rotationInputCoefficient * horizontalInput;
+		Vector3 torque = rotationMagnitude * this.transform.forward;
+		this.rotatingBody.ApplyTorque(torque);
+
+		// Handle thrust input.
+		float verticalInput = Input.GetAxis("Vertical");
+
+		if (verticalInput >= 0.0f)
+		{
+			float thrustMagnitude = this.thrustInputCoefficient * verticalInput;
+			//this.translatingObject.Thrust(thrustMagnitude);
+			Vector3 force = thrustMagnitude * this.transform.up;
+			this.translatingMass.ApplyForce(force);
+		}
+
+		// Handle laser input.
+		// Handle hyper space input.
+	}
 }

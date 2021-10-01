@@ -5,26 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 	public GameObject playerShipPrefab;
-	//private GameObject playerShipInstance;
 	private PlayerShip playerShip;
 
-	/*
 	public PlayerShip GetPlayerShip()
 	{
-		return playerShip;
-	}
-	*/
-
-	public PlayerShip SpawnPlayerShip()
-	{
-		/*
-		playerShipInstance = Instantiate(playerShipPrefab, Vector3.zero, Quaternion.identity);
-		playerShip = playerShipInstance.GetComponent<PlayerShip>();
-
-		return playerShip;
-		*/
-
-		return null;
+		return this.playerShip;
 	}
 
 	private void Awake()
@@ -40,11 +25,22 @@ public class GameManager : MonoBehaviour
 
 	private void InitializeGame()
 	{
-		playerShip = this.SpawnPlayerShip();
+		this.playerShip = this.SpawnPlayerShip();
+	}
+
+	private PlayerShip SpawnPlayerShip()
+	{
+		GameObject playerShipInstance = Instantiate(playerShipPrefab, Vector3.zero, Quaternion.identity);
+		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
+
+		return playerShip;
 	}
 
 	private void DecommissionGame()
 	{
-		Object.Destroy(playerShip.gameObject);
+		if (this.playerShip)
+		{
+			Object.Destroy(this.playerShip.gameObject);
+		}
 	}
 }
