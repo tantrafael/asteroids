@@ -14,16 +14,17 @@ public class PlayerShip : MonoBehaviour
 	public float drag;
 	public float thrustInputCoefficient;
 
+	public GameObject laserShotPrefab;
+
 	private RotatingBody rotatingBody;
-	private TranslatingMass translatingMass;
+	private TranslatingBody translatingBody;
 
 	private void Awake()
 	{
 		this.rotatingBody = this.gameObject.AddComponent<RotatingBody>();
-		this.rotatingBody.Initialize(momentOfInertia, angularDrag);
 
-		this.translatingMass = this.gameObject.AddComponent<TranslatingMass>();
-		this.translatingMass.Initialize(mass, drag);
+		this.translatingBody = this.gameObject.AddComponent<TranslatingBody>();
+		this.translatingBody.Initialize(mass, drag);
 
 		this.gameObject.AddComponent<ScreenWrapper>();
 	}
@@ -32,8 +33,7 @@ public class PlayerShip : MonoBehaviour
 	{
 		// Handle rotation input.
 		float horizontalInput = Input.GetAxis("Horizontal");
-		float rotationMagnitude = -rotationInputCoefficient * horizontalInput;
-		Vector3 torque = rotationMagnitude * this.transform.forward;
+		float torque = -rotationInputCoefficient * horizontalInput;
 		this.rotatingBody.ApplyTorque(torque);
 
 		// Handle thrust input.
@@ -42,12 +42,30 @@ public class PlayerShip : MonoBehaviour
 		if (verticalInput >= 0.0f)
 		{
 			float thrustMagnitude = this.thrustInputCoefficient * verticalInput;
-			//this.translatingObject.Thrust(thrustMagnitude);
-			Vector3 force = thrustMagnitude * this.transform.up;
-			this.translatingMass.ApplyForce(force);
+			Vector2 force = thrustMagnitude * this.transform.up;
+			this.translatingBody.ApplyForce(force);
 		}
 
 		// Handle laser input.
+		bool fireButtonInput = Input.GetButton("Fire1");
+
+		if (fireButtonInput)
+		{
+			this.Shoot();
+		}
+
 		// Handle hyper space input.
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		Debug.Log(collision.gameObject + ", " + Time.time);
+	}
+
+	public void Shoot()
+	{
+		Vector2 position = this.transform.position;
+		Quaternion rotation = this.transform.rotation;
+		GameObject laserShotInstance = Instantiate(laserShotPrefab, position, rotation);
 	}
 }

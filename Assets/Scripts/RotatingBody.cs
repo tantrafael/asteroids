@@ -4,35 +4,24 @@ using UnityEngine;
 
 public class RotatingBody : MonoBehaviour
 {
-	public float momentOfInertia;
-	public float angularDrag;
+	private Rigidbody2D rigidbody2D;
 	private float fixedDeltaTime;
-	private Vector3 angularVelocity;
-	private Vector3 appliedTorque;
+	private float appliedTorque;
 
 	private void Awake()
 	{
-		fixedDeltaTime = Time.fixedDeltaTime;
+		this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+		this.fixedDeltaTime = Time.fixedDeltaTime;
 	}
 
-	public void Initialize(float momentOfInertia, float angularDrag)
-	{
-		this.momentOfInertia = momentOfInertia;
-		this.angularDrag = angularDrag;
-	}
-
-	public void ApplyTorque(Vector3 torque)
+	public void ApplyTorque(float torque)
 	{
 		this.appliedTorque = torque;
 	}
 
+
 	private void FixedUpdate()
 	{
-		Vector3 angularDragTorque = -this.angularDrag * this.angularVelocity;
-		Vector3 netTorque = this.appliedTorque + angularDragTorque;
-		Vector3 angularAcceleration = netTorque / this.momentOfInertia;
-		Vector3 deltaAngularVelocity = angularAcceleration * fixedDeltaTime;
-		this.angularVelocity += deltaAngularVelocity;
-		this.transform.Rotate(this.angularVelocity, Space.Self);
+		this.rigidbody2D.rotation += appliedTorque;
 	}
 }

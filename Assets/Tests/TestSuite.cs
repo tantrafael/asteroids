@@ -31,10 +31,10 @@ public class TestSuite
 		yield return null;
 	}
 
+	[UnityTest]
 	public IEnumerator PlayerShipTurnsLeft()
 	{
 		PlayerShip playerShip = gameManager.GetPlayerShip();
-
 		UnityEngine.Assertions.Assert.IsNotNull(playerShip);
 
 		yield return null;
