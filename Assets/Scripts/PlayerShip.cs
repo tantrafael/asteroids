@@ -16,6 +16,9 @@ public class PlayerShip : MonoBehaviour
 
 	public GameObject laserShotPrefab;
 
+	public delegate void CollisionAction(GameObject gameObject, GameObject other);
+	public static event CollisionAction OnCollision;
+
 	private RotatingBody rotatingBody;
 	private TranslatingBody translatingBody;
 
@@ -46,8 +49,9 @@ public class PlayerShip : MonoBehaviour
 			this.translatingBody.ApplyForce(force);
 		}
 
-		// Handle laser input.
-		bool fireButtonInput = Input.GetButton("Fire1");
+		// Handle fire input.
+		//bool fireButtonInput = Input.GetButton("Fire1");
+		bool fireButtonInput = Input.GetKeyDown("space");
 
 		if (fireButtonInput)
 		{
@@ -57,15 +61,18 @@ public class PlayerShip : MonoBehaviour
 		// Handle hyper space input.
 	}
 
-	private void OnTriggerEnter2D(Collider2D collision)
+	private void OnTriggerEnter2D(Collider2D other)
 	{
-		Debug.Log(collision.gameObject + ", " + Time.time);
+		if (OnCollision != null)
+		{
+			OnCollision(this.gameObject, other.gameObject);
+		}
 	}
 
 	public void Shoot()
 	{
-		Vector2 position = this.transform.position;
+		Vector3 position = this.transform.position;
 		Quaternion rotation = this.transform.rotation;
-		GameObject laserShotInstance = Instantiate(laserShotPrefab, position, rotation);
+		Instantiate(laserShotPrefab, position, rotation);
 	}
 }

@@ -29,7 +29,10 @@ public class GameManager : MonoBehaviour
 	private void InitializeGame()
 	{
 		this.playerShip = this.SpawnPlayerShip();
+		PlayerShip.OnCollision += HandlePlayerShipCollision;
+
 		this.SpawnAsteroids();
+		Asteroid.OnCollision += HandleAsteroidCollision;
 	}
 
 	private PlayerShip SpawnPlayerShip()
@@ -44,17 +47,51 @@ public class GameManager : MonoBehaviour
 	{
 		for (var i = 0; i < 10; ++i)
 		{
+			/*
 			Vector2 position = Vector2.zero;
-			position.x = 6.0f * Random.Range(-1.0f, 1.0f);
-			position.y = 6.0f * Random.Range(-1.0f, 1.0f);
+			position.x = 8.0f * Random.Range(-1.0f, 1.0f);
+			position.y = 8.0f * Random.Range(-1.0f, 1.0f);
 
 			Vector2 direction = Vector2.zero;
 			direction.x = Random.Range(-1.0f, 1.0f);
 			direction.y = Random.Range(-1.0f, 1.0f);
 			float speed = Random.Range(1.0f, 2.0f);
 			Vector2 velocity = speed * direction;
+			*/
+
+			float angle;
+			Vector2 direction = Vector2.zero;
+
+			angle = Random.value * 2 * Mathf.PI;
+			direction.x = Mathf.Cos(angle);
+			direction.y = Mathf.Sin(angle);
+			Vector2 position = 6.0f * direction;
+
+			angle = Random.value * 2 * Mathf.PI;
+			direction.x = Mathf.Cos(angle);
+			direction.y = Mathf.Sin(angle);
+			float speed = Random.Range(1.0f, 2.0f);
+			Vector2 velocity = speed * direction;
 
 			this.asteroidManager.SpawnAsteroid(position, velocity);
+		}
+	}
+
+	private void HandlePlayerShipCollision(GameObject playerShip, GameObject other)
+	{
+		if (other.tag == "Asteroid")
+		{
+			//Destroy(playerShip);
+		}
+	}
+
+	private void HandleAsteroidCollision(GameObject asteroid, GameObject other)
+	{
+		if (other.tag == "Shot")
+		{
+			this.asteroidManager.HandleHit(asteroid);
+			//Destroy(asteroid);
+			Destroy(other);
 		}
 	}
 

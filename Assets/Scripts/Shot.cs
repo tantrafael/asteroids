@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserShot : MonoBehaviour
+public class Shot : MonoBehaviour
 {
 	public float speed;
 	public float maximumDistance;
+
 	private float traveledDistance;
 
 	private void Start()
