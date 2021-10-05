@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 308090428124331892}
   - component: {fileID: 4334180366473307451}
-  - component: {fileID: 6942881453968672520}
+  - component: {fileID: 4585651914172265882}
   - component: {fileID: 2376915312196208498}
   - component: {fileID: 8970279022445527431}
   m_Layer: 0
   m_Name: PlayerShip
-  m_TagString: Untagged
+  m_TagString: PlayerShip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -55,7 +55,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &6942881453968672520
+--- !u!60 &4585651914172265882
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,7 +71,7 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0.333333}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -80,10 +80,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.5, y: 0.5}
-      - {x: -0.5, y: -0.5}
-      - {x: 0.5, y: -0.5}
-      - {x: 0.5, y: 0.5}
+    - - {x: 0, y: 0.666667}
+      - {x: -0.5, y: -0.333333}
+      - {x: 0.5, y: -0.333333}
 --- !u!212 &2376915312196208498
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -124,8 +123,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 6e58acf84435b4e37b01333cdb5ead39, type: 3}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -152,5 +151,5 @@ MonoBehaviour:
   rotationInputCoefficient: 4
   mass: 1
   drag: 0.3
-  thrustInputCoefficient: 6
-  laserShotPrefab: {fileID: 1641144602838454356, guid: 642bf7b62a1bb406db3bcd29b245ca48, type: 3}
+  thrustInputCoefficient: 8
+  shotPrefab: {fileID: 1641144602838454356, guid: 642bf7b62a1bb406db3bcd29b245ca48, type: 3}

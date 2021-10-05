@@ -17,7 +17,7 @@ public class ScreenWrapper : MonoBehaviour
 	private void FixedUpdate()
 	{
 		Vector2 worldPosition = this.rigidbody2D.position;
-		Vector2 viewportPosition = camera.WorldToViewportPoint(worldPosition);
+		Vector2 viewportPosition = this.camera.WorldToViewportPoint(worldPosition);
 
 		if (!IsWithinViewport(viewportPosition))
 		{
@@ -25,7 +25,7 @@ public class ScreenWrapper : MonoBehaviour
 			Vector2 wrappedViewportPosition = Vector2.zero;
 			wrappedViewportPosition.x = WrapUnitInterval(viewportPosition.x);
 			wrappedViewportPosition.y = WrapUnitInterval(viewportPosition.y);
-			Vector2 wrappedWorldPosition = camera.ViewportToWorldPoint(wrappedViewportPosition);
+			Vector2 wrappedWorldPosition = this.camera.ViewportToWorldPoint(wrappedViewportPosition);
 			this.rigidbody2D.position = wrappedWorldPosition;
 		}
 	}

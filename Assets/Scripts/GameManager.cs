@@ -1,19 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
 	public GameObject playerShipPrefab;
+	public GameObject enemyShipPrefab;
 
+	private Camera camera;
 	private PlayerShip playerShip;
 	private AsteroidManager asteroidManager;
+
+	private UnityAction asteroidCollisionAction;
 
 	private void Awake()
 	{
 		DontDestroyOnLoad(this.gameObject);
+
+		this.camera = Camera.main;
 		this.asteroidManager = this.GetComponent<AsteroidManager>();
+
+		asteroidCollisionAction = new UnityAction(this.HandleAsteroidCollision);
+
 		this.InitializeGame();
+	}
+
+	private void OnEnable()
+	{
+		//EventManager.StartListening("AsteroidCollision", asteroidCollisionAction);
+	}
+
+	private void OnDisable()
+	{
+		//EventManager.StopListening("AsteroidCollision", asteroidCollisionAction);
 	}
 
 	private void OnDestroy()
@@ -31,8 +51,16 @@ public class GameManager : MonoBehaviour
 		this.playerShip = this.SpawnPlayerShip();
 		PlayerShip.OnCollision += HandlePlayerShipCollision;
 
-		this.SpawnAsteroids();
-		Asteroid.OnCollision += HandleAsteroidCollision;
+		this.asteroidManager.SpawnAsteroids();
+		//Asteroid.OnCollision += HandleAsteroidCollision;
+		EventManager.StartListening("AsteroidCollision", asteroidCollisionAction);
+
+		//StartCoroutine(this.SpawnEnemyShip());
+		this.SpawnEnemyShip();
+		//EnemyShip.OnCollision += HandleEnemyShipCollision;
+		//CollisionDetector.OnCollision += HandleEnemyShipCollision;
+
+		CollisionDetector.OnCollision += HandleCollision;
 	}
 
 	private PlayerShip SpawnPlayerShip()
@@ -43,39 +71,35 @@ public class GameManager : MonoBehaviour
 		return playerShip;
 	}
 
-	private void SpawnAsteroids()
+	private void SpawnEnemyShip()
 	{
-		for (var i = 0; i < 10; ++i)
+		int difficulty = 2;
+
+		Vector2 viewportPosition = new Vector2(0.1f, 0.5f);
+		Vector2 worldPosition = this.camera.ViewportToWorldPoint(viewportPosition);
+		//int direction = 1;
+
+		//GameObject enemyShipInstance = Instantiate(enemyShipPrefab);
+		GameObject enemyShipInstance = Instantiate(enemyShipPrefab, worldPosition, Quaternion.identity);
+		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
+		enemyShip.Initialize(difficulty);
+	}
+
+	private void HandleAsteroidCollision()
+	{
+		Debug.Log("Asteroid collision");
+	}
+
+	/*
+	private void HandleAsteroidCollision(GameObject asteroid, GameObject other)
+	{
+		if (other.tag == "Shot")
 		{
-			/*
-			Vector2 position = Vector2.zero;
-			position.x = 8.0f * Random.Range(-1.0f, 1.0f);
-			position.y = 8.0f * Random.Range(-1.0f, 1.0f);
-
-			Vector2 direction = Vector2.zero;
-			direction.x = Random.Range(-1.0f, 1.0f);
-			direction.y = Random.Range(-1.0f, 1.0f);
-			float speed = Random.Range(1.0f, 2.0f);
-			Vector2 velocity = speed * direction;
-			*/
-
-			float angle;
-			Vector2 direction = Vector2.zero;
-
-			angle = Random.value * 2 * Mathf.PI;
-			direction.x = Mathf.Cos(angle);
-			direction.y = Mathf.Sin(angle);
-			Vector2 position = 6.0f * direction;
-
-			angle = Random.value * 2 * Mathf.PI;
-			direction.x = Mathf.Cos(angle);
-			direction.y = Mathf.Sin(angle);
-			float speed = Random.Range(1.0f, 2.0f);
-			Vector2 velocity = speed * direction;
-
-			this.asteroidManager.SpawnAsteroid(position, velocity);
+			this.asteroidManager.HandleHit(asteroid);
+			Destroy(other);
 		}
 	}
+	*/
 
 	private void HandlePlayerShipCollision(GameObject playerShip, GameObject other)
 	{
@@ -85,21 +109,35 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private void HandleAsteroidCollision(GameObject asteroid, GameObject other)
+	private void HandleEnemyShipCollision(GameObject enemyShip, GameObject other)
 	{
 		if (other.tag == "Shot")
 		{
-			this.asteroidManager.HandleHit(asteroid);
-			//Destroy(asteroid);
+			Destroy(enemyShip);
+		}
+	}
+
+	private void HandleCollision(GameObject gameObject, GameObject other)
+	{
+		if ((gameObject.tag == "EnemyShip") && (other.tag == "Shot"))
+		{
+			Destroy(gameObject);
 			Destroy(other);
 		}
 	}
 
 	private void DecommissionGame()
 	{
+		PlayerShip.OnCollision -= HandlePlayerShipCollision;
+		//Asteroid.OnCollision -= HandleAsteroidCollision;
+		EnemyShip.OnCollision -= HandleEnemyShipCollision;
+		EventManager.StopListening("AsteroidCollision", asteroidCollisionAction);
+
 		if (this.playerShip)
 		{
 			Object.Destroy(this.playerShip.gameObject);
 		}
+
+		//this.asteroidManager.Decommission();
 	}
 }

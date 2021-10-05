@@ -14,7 +14,7 @@ public class PlayerShip : MonoBehaviour
 	public float drag;
 	public float thrustInputCoefficient;
 
-	public GameObject laserShotPrefab;
+	public GameObject shotPrefab;
 
 	public delegate void CollisionAction(GameObject gameObject, GameObject other);
 	public static event CollisionAction OnCollision;
@@ -34,12 +34,21 @@ public class PlayerShip : MonoBehaviour
 
 	private void Update()
 	{
-		// Handle rotation input.
+		this.HandleRotationInput();
+		this.HandleThrustInput();
+		this.HandleFireInput();
+		// Handle hyper space input.
+	}
+
+	private void HandleRotationInput()
+	{
 		float horizontalInput = Input.GetAxis("Horizontal");
 		float torque = -rotationInputCoefficient * horizontalInput;
 		this.rotatingBody.ApplyTorque(torque);
+	}
 
-		// Handle thrust input.
+	private void HandleThrustInput()
+	{
 		float verticalInput = Input.GetAxis("Vertical");
 
 		if (verticalInput >= 0.0f)
@@ -48,17 +57,24 @@ public class PlayerShip : MonoBehaviour
 			Vector2 force = thrustMagnitude * this.transform.up;
 			this.translatingBody.ApplyForce(force);
 		}
+	}
 
-		// Handle fire input.
+	private void HandleFireInput()
+	{
 		//bool fireButtonInput = Input.GetButton("Fire1");
 		bool fireButtonInput = Input.GetKeyDown("space");
 
-		if (fireButtonInput)
+		if (fireButtonInput == true)
 		{
 			this.Shoot();
 		}
+	}
 
-		// Handle hyper space input.
+	public void Shoot()
+	{
+		Vector3 position = this.transform.position;
+		Quaternion rotation = this.transform.rotation;
+		Instantiate(shotPrefab, position, rotation);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -67,12 +83,5 @@ public class PlayerShip : MonoBehaviour
 		{
 			OnCollision(this.gameObject, other.gameObject);
 		}
-	}
-
-	public void Shoot()
-	{
-		Vector3 position = this.transform.position;
-		Quaternion rotation = this.transform.rotation;
-		Instantiate(laserShotPrefab, position, rotation);
 	}
 }
