@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Shot : MonoBehaviour
 {
 	public float speed;
 	public float maximumDistance;
-
 	private float traveledDistance;
+
+	private void Awake()
+	{
+		Collider collider = this.gameObject.AddComponent<Collider>();
+		collider.Initialize(ColliderType.Shot);
+	}
 
 	private void Start()
 	{

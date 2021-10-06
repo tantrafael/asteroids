@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
 	private int size;
-	private CollisionDetector collisionDetector;
 
 	private void Awake()
 	{
-		this.collisionDetector = this.gameObject.AddComponent<CollisionDetector>();
+		Collider collider = this.gameObject.AddComponent<Collider>();
+		collider.Initialize(ColliderType.Asteroid);
+
+		this.gameObject.AddComponent<ScreenWrapper>();
 	}
 
 	public int Size
@@ -28,11 +28,4 @@ public class Asteroid : MonoBehaviour
 		// TODO: Remove magic number.
 		this.transform.localScale = 0.5f * this.size * Vector3.one;
 	}
-
-	/*
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-		EventManager.TriggerEvent("AsteroidCollision");
-	}
-	*/
 }

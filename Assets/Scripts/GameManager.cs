@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,46 +9,24 @@ public class GameManager : MonoBehaviour
 	private Camera camera;
 	private PlayerShip playerShip;
 	private AsteroidManager asteroidManager;
-
-	//private UnityAction<object> collisionAction;
-	//private UnityAction asteroidCollisionAction;
 	private UnityAction<object> asteroidHitByShotAction;
+	private UnityAction<object> enemyShipHitByShotAction;
+	private UnityAction<object> playerShipHitByAsteroidAction;
 
-	//private Dictionary<Tuple<string, string>, string> collisionEventTable;
+	public float Level { get; private set; }
+	public float Difficulty { get; private set; }
 
 	private void Awake()
 	{
-		/*
-		this.collisionEventTable = new Dictionary<Tuple<string, string>, string>
-		{
-			[new Tuple<string, string>("Asteroid", "Shot")] = "AsteroidHitByShot",
-			[new Tuple<string, string>("EnemyShip", "Shot")] = "EnemyShipHitByShot",
-			[new Tuple<string, string>("PlayerShip", "Asteroid")] = "PlayerShipHitByAsteroid"
-		};
-		*/
-
 		DontDestroyOnLoad(this.gameObject);
 
 		this.camera = Camera.main;
 		this.asteroidManager = this.GetComponent<AsteroidManager>();
-
-		//collisionAction = new UnityAction<object>(this.HandleCollision);
-		//asteroidCollisionAction = new UnityAction(this.HandleAsteroidCollision);
-		asteroidHitByShotAction = new UnityAction<object>(this.HandleAsteroidHitByShot);
-
-		//EventManager.StartListening("Collision", collisionAction);
+		this.asteroidHitByShotAction = new UnityAction<object>(this.HandleAsteroidHitByShot);
+		this.enemyShipHitByShotAction = new UnityAction<object>(this.HandleEnemyShipHitByShot);
+		this.playerShipHitByAsteroidAction = new UnityAction<object>(this.HandleplayerShipHitByAsteroid);
 
 		this.InitializeGame();
-	}
-
-	private void OnEnable()
-	{
-		//EventManager.StartListening("AsteroidCollision", asteroidCollisionAction);
-	}
-
-	private void OnDisable()
-	{
-		//EventManager.StopListening("AsteroidCollision", asteroidCollisionAction);
 	}
 
 	private void OnDestroy()
@@ -67,20 +42,15 @@ public class GameManager : MonoBehaviour
 	private void InitializeGame()
 	{
 		this.playerShip = this.SpawnPlayerShip();
-		PlayerShip.OnCollision += HandlePlayerShipCollision;
 
 		this.asteroidManager.SpawnAsteroids();
-		//Asteroid.OnCollision += HandleAsteroidCollision;
-		//EventManager.StartListening("AsteroidCollision", asteroidCollisionAction);
 
 		//StartCoroutine(this.SpawnEnemyShip());
 		this.SpawnEnemyShip();
-		//EnemyShip.OnCollision += HandleEnemyShipCollision;
-		//CollisionDetector.OnCollision += HandleEnemyShipCollision;
 
-		//CollisionDetector.OnCollision += HandleCollision;
-		//EventManager.StartListening("Collision", collisionAction);
-		EventManager.StartListening("AsteroidHitByShot", asteroidHitByShotAction);
+		EventManager.StartListening(GameEvent.AsteroidHitByShot, this.asteroidHitByShotAction);
+		EventManager.StartListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
+		EventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
 	}
 
 	private PlayerShip SpawnPlayerShip()
@@ -105,86 +75,37 @@ public class GameManager : MonoBehaviour
 		enemyShip.Initialize(difficulty);
 	}
 
-	/*
-	private void HandleCollision(object data)
-	{
-		//Debug.Log("GameManager::HandleCollision");
-
-		CollisionData collisionData = (CollisionData)data;
-		var key = new Tuple<string, string>(collisionData.self.tag, collisionData.other.tag);
-		string eventName;
-		this.collisionEventTable.TryGetValue(key, out eventName);
-
-		if (eventName != null)
-		{
-			EventManager.TriggerEvent(eventName);
-		}
-	}
-	*/
-
 	private void HandleAsteroidHitByShot(object data)
 	{
 		CollisionData collisionData = (CollisionData)data;
 		GameObject asteroid = collisionData.self;
 		GameObject shot = collisionData.other;
 
-		Destroy(collisionData.self);
-		Destroy(collisionData.other);
+		this.asteroidManager.HandleAsteroidHitByShot(asteroid);
+		Destroy(shot);
 	}
 
-	/*
-	private void HandleCollision(GameObject gameObject, GameObject other)
+	private void HandleEnemyShipHitByShot(object data)
 	{
-		if ((gameObject.tag == "EnemyShip") && (other.tag == "Shot"))
-		{
-			Destroy(gameObject);
-			Destroy(other);
-		}
-	}
-	*/
-
-	/*
-	private void HandleAsteroidCollision(object data)
-	{
-		Debug.Log("Asteroid collision");
 		CollisionData collisionData = (CollisionData)data;
-		Debug.Log(collisionData.gameObject + ", " + collisionData.other);
-	}
-	*/
+		GameObject enemyShip = collisionData.self;
+		GameObject shot = collisionData.other;
 
-	/*
-	private void HandleAsteroidCollision(GameObject asteroid, GameObject other)
-	{
-		if (other.tag == "Shot")
-		{
-			this.asteroidManager.HandleHit(asteroid);
-			Destroy(other);
-		}
-	}
-	*/
-
-	private void HandlePlayerShipCollision(GameObject playerShip, GameObject other)
-	{
-		if (other.tag == "Asteroid")
-		{
-			//Destroy(playerShip);
-		}
+		Destroy(enemyShip);
+		Destroy(shot);
 	}
 
-	private void HandleEnemyShipCollision(GameObject enemyShip, GameObject other)
+	private void HandleplayerShipHitByAsteroid(object data)
 	{
-		if (other.tag == "Shot")
-		{
-			Destroy(enemyShip);
-		}
+		CollisionData collisionData = (CollisionData)data;
+		GameObject playerShip = collisionData.self;
+
+		Destroy(playerShip);
 	}
 
 	private void DecommissionGame()
 	{
-		PlayerShip.OnCollision -= HandlePlayerShipCollision;
-		//Asteroid.OnCollision -= HandleAsteroidCollision;
-		EnemyShip.OnCollision -= HandleEnemyShipCollision;
-		//EventManager.StopListening("AsteroidCollision", asteroidCollisionAction);
+		EventManager.StartListening(GameEvent.AsteroidHitByShot, asteroidHitByShotAction);
 
 		if (this.playerShip)
 		{

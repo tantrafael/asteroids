@@ -15,6 +15,9 @@ public class EnemyShip : MonoBehaviour
 	private void Awake()
 	{
 		this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+
+		Collider collider = this.gameObject.AddComponent<Collider>();
+		collider.Initialize(ColliderType.EnemyShip);
 	}
 
 	private void Start()
@@ -34,13 +37,15 @@ public class EnemyShip : MonoBehaviour
 		{
 			//yield return new WaitForSeconds(3.0f);
 			this.UpdateDirection();
-			// TODO: Remove magic numbers.
+			// TODO: Remove magic number.
 			yield return new WaitForSeconds(3.0f);
 		}
 	}
 
 	private void UpdateDirection()
 	{
+		// TODO: Remove magic numbers.
+
 		Vector2 direction = Vector2.zero;
 		direction.x = 1.0f;
 

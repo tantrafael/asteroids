@@ -30,6 +30,9 @@ public class PlayerShip : MonoBehaviour
 		this.translatingBody.Initialize(mass, drag);
 
 		this.gameObject.AddComponent<ScreenWrapper>();
+
+		Collider collider = this.gameObject.AddComponent<Collider>();
+		collider.Initialize(ColliderType.PlayerShip);
 	}
 
 	private void Update()

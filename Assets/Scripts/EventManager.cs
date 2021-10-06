@@ -3,13 +3,20 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum GameEvent
+{
+	AsteroidHitByShot,
+	EnemyShipHitByShot,
+	PlayerShipHitByAsteroid
+};
+
 [System.Serializable]
-public class TypedEvent : UnityEvent<object> { }
+public class TypedEvent : UnityEvent<object> {}
 
 public class EventManager : MonoBehaviour
 {
-	private Dictionary<string, UnityEvent> eventDictionary;
-	private Dictionary<string, TypedEvent> typedEventDictionary;
+	private Dictionary<GameEvent, UnityEvent> eventDictionary;
+	private Dictionary<GameEvent, TypedEvent> typedEventDictionary;
 
 	private static EventManager eventManager;
 
@@ -39,16 +46,16 @@ public class EventManager : MonoBehaviour
 	{
 		if (eventDictionary == null)
 		{
-			eventDictionary = new Dictionary<string, UnityEvent>();
-			typedEventDictionary = new Dictionary<string, TypedEvent>();
+			eventDictionary = new Dictionary<GameEvent, UnityEvent>();
+			typedEventDictionary = new Dictionary<GameEvent, TypedEvent>();
 		}
 	}
 
-	public static void StartListening(string eventName, UnityAction listener)
+	public static void StartListening(GameEvent gameEvent, UnityAction listener)
 	{
 		UnityEvent thisEvent = null;
 
-		if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.eventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.AddListener(listener);
 		}
@@ -56,11 +63,11 @@ public class EventManager : MonoBehaviour
 		{
 			thisEvent = new UnityEvent();
 			thisEvent.AddListener(listener);
-			instance.eventDictionary.Add(eventName, thisEvent);
+			instance.eventDictionary.Add(gameEvent, thisEvent);
 		}
 	}
 
-	public static void StopListening(string eventName, UnityAction listener)
+	public static void StopListening(GameEvent gameEvent, UnityAction listener)
 	{
 		if (eventManager == null)
 		{
@@ -69,27 +76,27 @@ public class EventManager : MonoBehaviour
 
 		UnityEvent thisEvent = null;
 
-		if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.eventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.RemoveListener(listener);
 		}
 	}
 
-	public static void TriggerEvent(string eventName)
+	public static void TriggerEvent(GameEvent gameEvent)
 	{
 		UnityEvent thisEvent = null;
 
-		if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.eventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.Invoke();
 		}
 	}
 
-	public static void StartListening(string eventName, UnityAction<object> listener)
+	public static void StartListening(GameEvent gameEvent, UnityAction<object> listener)
 	{
 		TypedEvent thisEvent = null;
 
-		if (instance.typedEventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.typedEventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.AddListener(listener);
 		}
@@ -97,26 +104,26 @@ public class EventManager : MonoBehaviour
 		{
 			thisEvent = new TypedEvent();
 			thisEvent.AddListener(listener);
-			instance.typedEventDictionary.Add(eventName, thisEvent);
+			instance.typedEventDictionary.Add(gameEvent, thisEvent);
 		}
 	}
 
-	public static void StopListening(string eventName, UnityAction<object> listener)
+	public static void StopListening(GameEvent gameEvent, UnityAction<object> listener)
 	{
 		if (eventManager == null) return;
 
 		TypedEvent thisEvent = null;
-		if (instance.typedEventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.typedEventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.RemoveListener(listener);
 		}
 	}
 
-	public static void TriggerEvent(string eventName, object data)
+	public static void TriggerEvent(GameEvent gameEvent, object data)
 	{
 		TypedEvent thisEvent = null;
 
-		if (instance.typedEventDictionary.TryGetValue(eventName, out thisEvent))
+		if (instance.typedEventDictionary.TryGetValue(gameEvent, out thisEvent))
 		{
 			thisEvent.Invoke(data);
 		}

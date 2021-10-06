@@ -44,7 +44,7 @@ public class AsteroidManager : MonoBehaviour
 		this.asteroids.Add(asteroidInstance);
 	}
 
-	public void HandleHit(GameObject asteroidInstance)
+	public void HandleAsteroidHitByShot(GameObject asteroidInstance)
 	{
 		Asteroid asteroid = asteroidInstance.GetComponent<Asteroid>();
 		Vector2 position = asteroidInstance.transform.position;
@@ -52,6 +52,7 @@ public class AsteroidManager : MonoBehaviour
 		this.asteroids.Remove(asteroidInstance);
 		Destroy(asteroidInstance);
 
+		// TODO: Remove magic number.
 		if (asteroid.Size > 1)
 		{
 			int size = asteroid.Size - 1;
