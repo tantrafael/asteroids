@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 4585651914172265882}
   - component: {fileID: 2376915312196208498}
   - component: {fileID: 8970279022445527431}
+  - component: {fileID: 9207540946080413737}
+  - component: {fileID: 4972641157382106354}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: PlayerShip
@@ -153,3 +155,27 @@ MonoBehaviour:
   drag: 0.3
   thrustInputCoefficient: 8
   shotPrefab: {fileID: 1641144602838454356, guid: 642bf7b62a1bb406db3bcd29b245ca48, type: 3}
+--- !u!114 &9207540946080413737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335160174696095831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7da6575171414a3d9dfc85bfe6cce11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4972641157382106354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335160174696095831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b29fb74555ed4d0cab0d596a7408b1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

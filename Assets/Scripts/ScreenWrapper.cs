@@ -4,38 +4,37 @@ using UnityEngine;
 
 public class ScreenWrapper : MonoBehaviour
 {
-	private Camera camera;
-	private Rigidbody2D rigidbody2D;
+	private Camera mainCamera;
+	private Rigidbody2D body;
 
 	private void Awake()
 	{
-		// TODO: pass camera as argument.
-		this.camera = Camera.main;
-		this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+		this.mainCamera = Camera.main;
+		this.body = this.GetComponent<Rigidbody2D>();
 	}
 
 	private void FixedUpdate()
 	{
-		Vector2 worldPosition = this.rigidbody2D.position;
-		Vector2 viewportPosition = this.camera.WorldToViewportPoint(worldPosition);
+		Vector2 worldPosition = this.body.position;
+		Vector2 viewportPosition = this.mainCamera.WorldToViewportPoint(worldPosition);
 
-		if (!IsWithinViewport(viewportPosition))
+		if (!this.IsWithinViewport(viewportPosition))
 		{
 			// Wrap position around screen edges.
 			Vector2 wrappedViewportPosition = Vector2.zero;
 			wrappedViewportPosition.x = WrapUnitInterval(viewportPosition.x);
 			wrappedViewportPosition.y = WrapUnitInterval(viewportPosition.y);
-			Vector2 wrappedWorldPosition = this.camera.ViewportToWorldPoint(wrappedViewportPosition);
-			this.rigidbody2D.position = wrappedWorldPosition;
+			Vector2 wrappedWorldPosition = this.mainCamera.ViewportToWorldPoint(wrappedViewportPosition);
+			this.body.position = wrappedWorldPosition;
 		}
 	}
 
-	private bool IsWithinViewport(Vector2 pos)
+	private bool IsWithinViewport(Vector2 position)
 	{
-		return (pos.x >= 0.0f)
-			&& (pos.x <= 1.0f)
-			&& (pos.y >= 0.0f)
-			&& (pos.y <= 1.0f);
+		return (position.x >= 0.0f)
+			&& (position.x <= 1.0f)
+			&& (position.y >= 0.0f)
+			&& (position.y <= 1.0f);
 	}
 
 	private float WrapUnitInterval(float f)

@@ -8,8 +8,17 @@ public class Shot : MonoBehaviour
 
 	private void Awake()
 	{
+		/*
 		Collider collider = this.gameObject.AddComponent<Collider>();
 		collider.Initialize(ColliderType.Shot);
+		*/
+
+		Collider collider = this.GetComponent<Collider>();
+
+		if (collider)
+		{
+			collider.Initialize(ColliderType.Shot);
+		}
 	}
 
 	private void Start()

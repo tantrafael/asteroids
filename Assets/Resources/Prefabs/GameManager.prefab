@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6589862018716384571}
   - component: {fileID: -5185410513726936826}
   - component: {fileID: 6807160845753481744}
+  - component: {fileID: 5537435274028469928}
   - component: {fileID: 8708020425150592191}
   m_Layer: 0
   m_Name: GameManager
@@ -60,6 +61,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   asteroidPrefab: {fileID: 2263389064755704044, guid: b7b658d5d571a40bda29478a77900cfc, type: 3}
+--- !u!114 &5537435274028469928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218855121802922828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e00c3d23cfa94fb58f8fb25259d7074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyShipPrefab: {fileID: 1757036386012755802, guid: 3a32a892446584d73a65729edca452da, type: 3}
+  maxConcurrentEnemyShips: 5
 --- !u!114 &8708020425150592191
 MonoBehaviour:
   m_ObjectHideFlags: 0

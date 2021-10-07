@@ -6,9 +6,12 @@ public class GameManager : MonoBehaviour
 	public GameObject playerShipPrefab;
 	public GameObject enemyShipPrefab;
 
-	private Camera camera;
+	private Camera mainCamera;
 	private PlayerShip playerShip;
 	private AsteroidManager asteroidManager;
+	private EnemyShipManager enemyShipManager;
+
+	// Actions
 	private UnityAction<object> asteroidHitByShotAction;
 	private UnityAction<object> enemyShipHitByShotAction;
 	private UnityAction<object> playerShipHitByAsteroidAction;
@@ -20,11 +23,14 @@ public class GameManager : MonoBehaviour
 	{
 		DontDestroyOnLoad(this.gameObject);
 
-		this.camera = Camera.main;
+		this.mainCamera = Camera.main;
+
 		this.asteroidManager = this.GetComponent<AsteroidManager>();
+		this.enemyShipManager = this.GetComponent<EnemyShipManager>();
+
 		this.asteroidHitByShotAction = new UnityAction<object>(this.HandleAsteroidHitByShot);
 		this.enemyShipHitByShotAction = new UnityAction<object>(this.HandleEnemyShipHitByShot);
-		this.playerShipHitByAsteroidAction = new UnityAction<object>(this.HandleplayerShipHitByAsteroid);
+		this.playerShipHitByAsteroidAction = new UnityAction<object>(this.HandlePlayerShipHitByAsteroid);
 
 		this.InitializeGame();
 	}
@@ -45,9 +51,6 @@ public class GameManager : MonoBehaviour
 
 		this.asteroidManager.SpawnAsteroids();
 
-		//StartCoroutine(this.SpawnEnemyShip());
-		this.SpawnEnemyShip();
-
 		EventManager.StartListening(GameEvent.AsteroidHitByShot, this.asteroidHitByShotAction);
 		EventManager.StartListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
 		EventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
@@ -59,20 +62,6 @@ public class GameManager : MonoBehaviour
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
 
 		return playerShip;
-	}
-
-	private void SpawnEnemyShip()
-	{
-		int difficulty = 2;
-
-		Vector2 viewportPosition = new Vector2(0.1f, 0.5f);
-		Vector2 worldPosition = this.camera.ViewportToWorldPoint(viewportPosition);
-		//int direction = 1;
-
-		//GameObject enemyShipInstance = Instantiate(enemyShipPrefab);
-		GameObject enemyShipInstance = Instantiate(enemyShipPrefab, worldPosition, Quaternion.identity);
-		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
-		enemyShip.Initialize(difficulty);
 	}
 
 	private void HandleAsteroidHitByShot(object data)
@@ -91,11 +80,12 @@ public class GameManager : MonoBehaviour
 		GameObject enemyShip = collisionData.self;
 		GameObject shot = collisionData.other;
 
-		Destroy(enemyShip);
+		//Destroy(enemyShip);
+		this.enemyShipManager.HandleEnemyShipHitByShot(enemyShip);
 		Destroy(shot);
 	}
 
-	private void HandleplayerShipHitByAsteroid(object data)
+	private void HandlePlayerShipHitByAsteroid(object data)
 	{
 		CollisionData collisionData = (CollisionData)data;
 		GameObject playerShip = collisionData.self;
@@ -105,7 +95,9 @@ public class GameManager : MonoBehaviour
 
 	private void DecommissionGame()
 	{
-		EventManager.StartListening(GameEvent.AsteroidHitByShot, asteroidHitByShotAction);
+		EventManager.StopListening(GameEvent.AsteroidHitByShot, this.asteroidHitByShotAction);
+		EventManager.StopListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
+		EventManager.StopListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
 
 		if (this.playerShip)
 		{

@@ -7,13 +7,13 @@ public class TranslatingBody : MonoBehaviour
 	public float mass;
 	public float drag;
 
-	private Rigidbody2D rigidbody2D;
+	private Rigidbody2D body;
 	private float fixedDeltaTime;
 	private Vector2 appliedForce;
 
 	private void Awake()
 	{
-		this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+		this.body = this.GetComponent<Rigidbody2D>();
 		this.fixedDeltaTime = Time.fixedDeltaTime;
 	}
 
@@ -25,7 +25,7 @@ public class TranslatingBody : MonoBehaviour
 
 	public void SetVelocity(Vector2 velocity)
 	{
-		this.rigidbody2D.velocity = velocity;
+		this.body.velocity = velocity;
 	}
 
 	public void ApplyForce(Vector2 force)
@@ -35,10 +35,10 @@ public class TranslatingBody : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		Vector2 dragForce = -this.drag * this.rigidbody2D.velocity;
+		Vector2 dragForce = -this.drag * this.body.velocity;
 		Vector2 netForce = this.appliedForce + dragForce;
 		Vector2 acceleration = netForce / this.mass;
 		Vector2 deltaVelocity = acceleration * fixedDeltaTime;
-		this.rigidbody2D.velocity += deltaVelocity;
+		this.body.velocity += deltaVelocity;
 	}
 }

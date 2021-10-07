@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerShip : MonoBehaviour
@@ -29,10 +27,19 @@ public class PlayerShip : MonoBehaviour
 		this.translatingBody = this.gameObject.AddComponent<TranslatingBody>();
 		this.translatingBody.Initialize(mass, drag);
 
-		this.gameObject.AddComponent<ScreenWrapper>();
-
+		/*
 		Collider collider = this.gameObject.AddComponent<Collider>();
 		collider.Initialize(ColliderType.PlayerShip);
+		*/
+
+		Collider collider = this.GetComponent<Collider>();
+
+		if (collider)
+		{
+			collider.Initialize(ColliderType.PlayerShip);
+		}
+
+		//this.gameObject.AddComponent<ScreenWrapper>();
 	}
 
 	private void Update()

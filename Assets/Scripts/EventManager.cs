@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections;
 using System.Collections.Generic;
 
 public enum GameEvent
 {
 	AsteroidHitByShot,
 	EnemyShipHitByShot,
-	PlayerShipHitByAsteroid
+	PlayerShipHitByAsteroid,
+	EnemyShipLeftScope
 };
 
 [System.Serializable]

@@ -5,6 +5,7 @@ using UnityEngine;
 public class AsteroidManager : MonoBehaviour
 {
 	public GameObject asteroidPrefab;
+
 	private List<GameObject> asteroids = new List<GameObject>();
 	private int nrSpawningAsteroids = 5;
 	private int maxSize = 3;

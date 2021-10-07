@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RotatingBody : MonoBehaviour
 {
-	private Rigidbody2D rigidbody2D;
-	private float fixedDeltaTime;
+	private Rigidbody2D body;
 	private float appliedTorque;
 
 	private void Awake()
 	{
-		this.rigidbody2D = this.GetComponent<Rigidbody2D>();
-		this.fixedDeltaTime = Time.fixedDeltaTime;
+		this.body = this.GetComponent<Rigidbody2D>();
 	}
 
 	public void ApplyTorque(float torque)
@@ -22,6 +18,6 @@ public class RotatingBody : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		this.rigidbody2D.rotation += appliedTorque;
+		this.body.rotation += appliedTorque;
 	}
 }
