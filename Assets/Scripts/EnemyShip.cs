@@ -1,11 +1,11 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
 	private int size;
 	private float difficulty;
-	//private int direction;
 	private float speed;
 	private Vector2 direction;
 	private Rigidbody2D body;
@@ -22,34 +22,28 @@ public class EnemyShip : MonoBehaviour
 		}
 	}
 
-	//public void Initialize(int size, float difficulty, int direction)
-	public void Initialize(int size, float difficulty, Vector2 position, int direction)
+	public void Initialize(int size, float difficulty, int direction)
 	{
 		this.size = size;
 		this.difficulty = difficulty;
-		//this.direction = direction;
-		this.body.position = position;
 		this.direction = (direction == 1) ? Vector2.right : Vector2.left;
 		this.speed = 4.0f * difficulty;
 	}
 
 	private void Start()
 	{
-		//this.body.velocity = speed * this.transform.right;
-		//Vector2 direction = (this.direction == 1) ? Vector2.right : Vector2.left;
 		this.body.velocity = speed * this.direction;
 
-		this.StartCoroutine(ControlMovement());
+		this.ControlMovement();
 	}
 
-	private IEnumerator ControlMovement()
+	private async void ControlMovement()
 	{
 		while (true)
 		{
-			yield return new WaitForSeconds(3.0f);
-			this.UpdateDirection();
 			// TODO: Remove magic number.
-			//yield return new WaitForSeconds(3.0f);
+			await Task.Delay(System.TimeSpan.FromSeconds(5.0));
+			this.UpdateDirection();
 		}
 	}
 

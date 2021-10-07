@@ -7,6 +7,7 @@ public enum GameEvent
 	AsteroidHitByShot,
 	EnemyShipHitByShot,
 	PlayerShipHitByAsteroid,
+	PlayerShipHitByEnemyShip,
 	EnemyShipLeftScope
 };
 

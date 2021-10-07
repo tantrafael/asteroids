@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -23,8 +23,8 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void Start()
 	{
-		this.StartCoroutine(this.ScheduleNextEnemyShip());
 		EventManager.StartListening(GameEvent.EnemyShipLeftScope, this.enemyShipLeftScopeAction);
+		this.ScheduleNextEnemyShip();
 	}
 
 	public void SpawnEnemyShip()
@@ -47,30 +47,29 @@ public class EnemyShipManager : MonoBehaviour
 		viewportPosition.y = Random.value;
 		Vector2 worldPosition = this.mainCamera.ViewportToWorldPoint(viewportPosition);
 
-		GameObject enemyShipInstance = Instantiate(enemyShipPrefab);
-		//GameObject enemyShipInstance = Instantiate(enemyShipPrefab, worldPosition, Quaternion.identity);
+		GameObject enemyShipInstance = Instantiate(enemyShipPrefab, worldPosition, Quaternion.identity);
 		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
-		enemyShip.Initialize(size, difficulty, worldPosition, direction);
+		enemyShip.Initialize(size, difficulty, direction);
 		this.enemyShips.Add(enemyShipInstance);
 	}
 
 	public void HandleEnemyShipHitByShot(GameObject enemyShipInstance)
 	{
 		this.DeleteEnemyShip(enemyShipInstance);
-		this.StartCoroutine(ScheduleNextEnemyShip());
+		this.ScheduleNextEnemyShip();
 	}
 
 	public void HandleEnemyShipLeftScope(object data)
 	{
 		GameObject enemyShipInstance = (GameObject)data;
 		this.DeleteEnemyShip(enemyShipInstance);
-		this.StartCoroutine(ScheduleNextEnemyShip());
+		this.ScheduleNextEnemyShip();
 	}
 
-	private IEnumerator ScheduleNextEnemyShip()
+	private async void ScheduleNextEnemyShip()
 	{
 		// TODO: Remove magic number.
-		yield return new WaitForSeconds(5);
+		await Task.Delay(System.TimeSpan.FromSeconds(5.0f));
 		this.SpawnEnemyShip();
 	}
 

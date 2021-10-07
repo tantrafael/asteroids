@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour
 	private AsteroidManager asteroidManager;
 	private EnemyShipManager enemyShipManager;
 
-	// Actions
 	private UnityAction<object> asteroidHitByShotAction;
 	private UnityAction<object> enemyShipHitByShotAction;
 	private UnityAction<object> playerShipHitByAsteroidAction;
+	private UnityAction<object> playerShipHitByEnemyShipAction;
 
 	public float Level { get; private set; }
 	public float Difficulty { get; private set; }
@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
 		this.asteroidHitByShotAction = new UnityAction<object>(this.HandleAsteroidHitByShot);
 		this.enemyShipHitByShotAction = new UnityAction<object>(this.HandleEnemyShipHitByShot);
 		this.playerShipHitByAsteroidAction = new UnityAction<object>(this.HandlePlayerShipHitByAsteroid);
+		this.playerShipHitByEnemyShipAction = new UnityAction<object>(this.HandlePlayerShipHitByEnemyShip);
 
 		this.InitializeGame();
 	}
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
 		EventManager.StartListening(GameEvent.AsteroidHitByShot, this.asteroidHitByShotAction);
 		EventManager.StartListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
 		EventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
+		EventManager.StartListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
 	}
 
 	private PlayerShip SpawnPlayerShip()
@@ -93,11 +95,20 @@ public class GameManager : MonoBehaviour
 		Destroy(playerShip);
 	}
 
+	private void HandlePlayerShipHitByEnemyShip(object data)
+	{
+		CollisionData collisionData = (CollisionData)data;
+		GameObject playerShip = collisionData.self;
+
+		Destroy(playerShip);
+	}
+
 	private void DecommissionGame()
 	{
 		EventManager.StopListening(GameEvent.AsteroidHitByShot, this.asteroidHitByShotAction);
 		EventManager.StopListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
 		EventManager.StopListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
+		EventManager.StopListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
 
 		if (this.playerShip)
 		{
