@@ -43,7 +43,6 @@ public class AsteroidManager : MonoBehaviour
 
 		GameObject asteroidInstance = Instantiate(asteroidPrefab, position, Quaternion.identity);
 		Asteroid asteroid = asteroidInstance.GetComponent<Asteroid>();
-		//asteroid.Initialize(size, velocity);
 		asteroid.Initialize(size, velocity, this.eventManager);
 		this.asteroids.Add(asteroidInstance);
 	}

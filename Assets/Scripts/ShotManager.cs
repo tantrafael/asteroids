@@ -29,7 +29,6 @@ public class ShotManager : MonoBehaviour
 		Quaternion rotation = Quaternion.LookRotation(Vector3.forward, velocity);
 		GameObject shotInstance = Instantiate(this.shotPrefab, position, rotation);
 		Shot shot = shotInstance.GetComponent<Shot>();
-		//shot.Initialize(colliderType, velocity);
 		shot.Initialize(colliderType, velocity, this.eventManager);
 		this.shots.Add(shotInstance);
 	}

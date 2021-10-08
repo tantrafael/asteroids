@@ -34,7 +34,6 @@ public class Collider : MonoBehaviour
 
 	public ColliderType Type { get; private set; }
 
-	//public void Initialize(ColliderType type)
 	public void Initialize(ColliderType type, EventManager eventManager)
 	{
 		this.Type = type;
@@ -59,7 +58,6 @@ public class Collider : MonoBehaviour
 			CollisionData collisionData;
 			collisionData.self = this.gameObject;
 			collisionData.other = other.gameObject;
-			//EventManager.TriggerEvent(gameEvent, collisionData);
 			this.eventManager.TriggerEvent(gameEvent, collisionData);
 		}
 	}

@@ -27,12 +27,9 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void Start()
 	{
-		//EventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
-
 		this.ScheduleNextEnemyShip();
 	}
 
-	//public void Initialize(ShotManager shotManager)
 	public void Initialize(EventManager eventManager, ShotManager shotManager)
 	{
 		this.eventManager = eventManager;
@@ -53,7 +50,6 @@ public class EnemyShipManager : MonoBehaviour
 		}
 
 		int size = 1;
-		//float difficulty = 0.5f;
 		float difficulty = Random.value;
 		int direction = (Random.value > 0.5f) ? 1 : -1;
 		Vector2 viewportPosition = Vector2.zero;
@@ -63,7 +59,6 @@ public class EnemyShipManager : MonoBehaviour
 
 		GameObject enemyShipInstance = Instantiate(this.enemyShipPrefab, worldPosition, Quaternion.identity);
 		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
-		//enemyShip.Initialize(size, difficulty, direction);
 		enemyShip.Initialize(size, difficulty, direction, this.eventManager, this.shotManager);
 		this.enemyShips.Add(enemyShipInstance);
 	}
@@ -112,7 +107,6 @@ public class EnemyShipManager : MonoBehaviour
 
 		foreach (GameObject enemyShipInstance in enemyShipsOutOfScope)
 		{
-			//EventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
 			this.eventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
 		}
 	}
@@ -130,7 +124,6 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		//EventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 		this.eventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.StopAllCoroutines();

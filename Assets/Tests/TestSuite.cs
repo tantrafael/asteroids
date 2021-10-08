@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -24,15 +23,6 @@ public class TestSuite
 
 	[UnityTest]
 	public IEnumerator PlayerShipSpawns()
-	{
-		PlayerShip playerShip = gameManager.GetPlayerShip();
-		UnityEngine.Assertions.Assert.IsNotNull(playerShip);
-
-		yield return null;
-	}
-
-	[UnityTest]
-	public IEnumerator PlayerShipTurnsLeft()
 	{
 		PlayerShip playerShip = gameManager.GetPlayerShip();
 		UnityEngine.Assertions.Assert.IsNotNull(playerShip);
