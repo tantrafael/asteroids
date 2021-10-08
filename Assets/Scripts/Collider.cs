@@ -30,11 +30,15 @@ public class Collider : MonoBehaviour
 		[new CollisionPair(ColliderType.PlayerShip, ColliderType.EnemyShip)] = GameEvent.PlayerShipHitByEnemyShip
 	};
 
+	private EventManager eventManager;
+
 	public ColliderType Type { get; private set; }
 
-	public void Initialize(ColliderType type)
+	//public void Initialize(ColliderType type)
+	public void Initialize(ColliderType type, EventManager eventManager)
 	{
 		this.Type = type;
+		this.eventManager = eventManager;
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -55,7 +59,8 @@ public class Collider : MonoBehaviour
 			CollisionData collisionData;
 			collisionData.self = this.gameObject;
 			collisionData.other = other.gameObject;
-			EventManager.TriggerEvent(gameEvent, collisionData);
+			//EventManager.TriggerEvent(gameEvent, collisionData);
+			this.eventManager.TriggerEvent(gameEvent, collisionData);
 		}
 	}
 }

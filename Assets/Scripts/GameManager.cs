@@ -7,10 +7,11 @@ public class GameManager : MonoBehaviour
 	public GameObject enemyShipPrefab;
 
 	private Camera mainCamera;
-	private PlayerShip playerShip;
+	private EventManager eventManager;
 	private AsteroidManager asteroidManager;
 	private EnemyShipManager enemyShipManager;
 	private ShotManager shotManager;
+	private PlayerShip playerShip;
 
 	private UnityAction<object> asteroidHitByPlayerShotAction;
 	private UnityAction<object> enemyShipHitByPlayerShotAction;
@@ -27,10 +28,16 @@ public class GameManager : MonoBehaviour
 
 		this.mainCamera = Camera.main;
 
+		this.eventManager = this.GetComponent<EventManager>();
+
 		this.asteroidManager = this.GetComponent<AsteroidManager>();
+		this.asteroidManager.Initialize(this.eventManager);
+
 		this.shotManager = this.GetComponent<ShotManager>();
+
 		this.enemyShipManager = this.GetComponent<EnemyShipManager>();
-		this.enemyShipManager.Initialize(this.shotManager);
+		//this.enemyShipManager.Initialize(this.shotManager);
+		this.enemyShipManager.Initialize(this.eventManager, this.shotManager);
 
 		this.asteroidHitByPlayerShotAction = new UnityAction<object>(this.HandleAsteroidHitByPlayerShot);
 		this.enemyShipHitByPlayerShotAction = new UnityAction<object>(this.HandleEnemyShipHitByPlayerShot);
@@ -53,11 +60,19 @@ public class GameManager : MonoBehaviour
 
 	private void InitializeGame()
 	{
+		/*
 		EventManager.StartListening(GameEvent.AsteroidHitByPlayerShot, this.asteroidHitByPlayerShotAction);
 		EventManager.StartListening(GameEvent.EnemyShipHitByPlayerShot, this.enemyShipHitByPlayerShotAction);
 		EventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
 		EventManager.StartListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
 		EventManager.StartListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
+		*/
+
+		this.eventManager.StartListening(GameEvent.AsteroidHitByPlayerShot, this.asteroidHitByPlayerShotAction);
+		this.eventManager.StartListening(GameEvent.EnemyShipHitByPlayerShot, this.enemyShipHitByPlayerShotAction);
+		this.eventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
+		this.eventManager.StartListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
+		this.eventManager.StartListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
 
 		this.playerShip = this.SpawnPlayerShip();
 		this.asteroidManager.SpawnAsteroids();
@@ -67,7 +82,8 @@ public class GameManager : MonoBehaviour
 	{
 		GameObject playerShipInstance = Instantiate(playerShipPrefab, Vector3.zero, Quaternion.identity);
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
-		playerShip.Initialize(this.shotManager);
+		//playerShip.Initialize(this.shotManager);
+		playerShip.Initialize(this.eventManager, this.shotManager);
 
 		return playerShip;
 	}
@@ -120,11 +136,19 @@ public class GameManager : MonoBehaviour
 
 	private void DecommissionGame()
 	{
+		/*
 		EventManager.StopListening(GameEvent.AsteroidHitByPlayerShot, this.asteroidHitByPlayerShotAction);
 		EventManager.StopListening(GameEvent.EnemyShipHitByPlayerShot, this.enemyShipHitByPlayerShotAction);
 		EventManager.StopListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
 		EventManager.StopListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
 		EventManager.StopListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
+		*/
+
+		this.eventManager.StopListening(GameEvent.AsteroidHitByPlayerShot, this.asteroidHitByPlayerShotAction);
+		this.eventManager.StopListening(GameEvent.EnemyShipHitByPlayerShot, this.enemyShipHitByPlayerShotAction);
+		this.eventManager.StopListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
+		this.eventManager.StopListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
+		this.eventManager.StopListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
 
 		if (this.playerShip)
 		{

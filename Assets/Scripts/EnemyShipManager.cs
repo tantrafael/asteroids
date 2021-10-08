@@ -14,6 +14,7 @@ public class EnemyShipManager : MonoBehaviour
 
 	private UnityAction<object> enemyShipOutOfScopeAction;
 
+	private EventManager eventManager;
 	private ShotManager shotManager;
 
 	private void Awake()
@@ -26,14 +27,18 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void Start()
 	{
-		EventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
+		//EventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.ScheduleNextEnemyShip();
 	}
 
-	public void Initialize(ShotManager shotManager)
+	//public void Initialize(ShotManager shotManager)
+	public void Initialize(EventManager eventManager, ShotManager shotManager)
 	{
+		this.eventManager = eventManager;
 		this.shotManager = shotManager;
+
+		this.eventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 	}
 
 	public void SpawnEnemyShip()
@@ -59,7 +64,7 @@ public class EnemyShipManager : MonoBehaviour
 		GameObject enemyShipInstance = Instantiate(this.enemyShipPrefab, worldPosition, Quaternion.identity);
 		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
 		//enemyShip.Initialize(size, difficulty, direction);
-		enemyShip.Initialize(size, difficulty, direction, this.shotManager);
+		enemyShip.Initialize(size, difficulty, direction, this.eventManager, this.shotManager);
 		this.enemyShips.Add(enemyShipInstance);
 	}
 
@@ -107,7 +112,8 @@ public class EnemyShipManager : MonoBehaviour
 
 		foreach (GameObject enemyShipInstance in enemyShipsOutOfScope)
 		{
-			EventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
+			//EventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
+			this.eventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
 		}
 	}
 
@@ -124,7 +130,8 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		EventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
+		//EventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
+		this.eventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.StopAllCoroutines();
 	}

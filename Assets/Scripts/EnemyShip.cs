@@ -10,18 +10,21 @@ public class EnemyShip : MonoBehaviour
 	private float speed;
 	private Vector2 direction;
 	private Rigidbody2D body;
+	private EventManager eventManager;
 	private ShotManager shotManager;
 
 	private void Awake()
 	{
 		this.body = this.GetComponent<Rigidbody2D>();
 
+		/*
 		Collider collider = this.GetComponent<Collider>();
 
 		if (collider)
 		{
 			collider.Initialize(ColliderType.EnemyShip);
 		}
+		*/
 	}
 
 	private void Start()
@@ -32,18 +35,23 @@ public class EnemyShip : MonoBehaviour
 		this.StartCoroutine(this.ControlMovement());
 	}
 
-	private void OnDestroy()
-	{
-		this.StopAllCoroutines();
-	}
-
-	public void Initialize(int size, float difficulty, int direction, ShotManager shotManager)
+	//public void Initialize(int size, float difficulty, int direction, ShotManager shotManager)
+	public void Initialize(int size, float difficulty, int direction, EventManager eventManager, ShotManager shotManager)
 	{
 		this.size = size;
 		this.difficulty = difficulty;
 		this.direction = (direction == 1) ? Vector2.right : Vector2.left;
 		this.speed = 4.0f * difficulty;
+		this.eventManager = eventManager;
 		this.shotManager = shotManager;
+
+		Collider collider = this.GetComponent<Collider>();
+
+		if (collider)
+		{
+			//collider.Initialize(ColliderType.EnemyShip);
+			collider.Initialize(ColliderType.EnemyShip, this.eventManager);
+		}
 	}
 
 	private IEnumerator ControlShooting()
@@ -95,5 +103,10 @@ public class EnemyShip : MonoBehaviour
 		}
 
 		this.body.velocity = this.speed * this.direction;
+	}
+
+	private void OnDestroy()
+	{
+		this.StopAllCoroutines();
 	}
 }

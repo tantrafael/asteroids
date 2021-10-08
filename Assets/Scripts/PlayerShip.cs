@@ -20,6 +20,7 @@ public class PlayerShip : MonoBehaviour
 
 	private RotatingBody rotatingBody;
 	private TranslatingBody translatingBody;
+	private EventManager eventManager;
 	private ShotManager shotManager;
 
 	private void Awake()
@@ -33,13 +34,22 @@ public class PlayerShip : MonoBehaviour
 
 		if (collider)
 		{
-			collider.Initialize(ColliderType.PlayerShip);
+			//collider.Initialize(ColliderType.PlayerShip);
 		}
 	}
 
-	public void Initialize(ShotManager shotManager)
+	//public void Initialize(ShotManager shotManager)
+	public void Initialize(EventManager eventManager, ShotManager shotManager)
 	{
+		this.eventManager = eventManager;
 		this.shotManager = shotManager;
+
+		Collider collider = this.GetComponent<Collider>();
+
+		if (collider)
+		{
+			collider.Initialize(ColliderType.PlayerShip, this.eventManager);
+		}
 	}
 
 	private void Update()

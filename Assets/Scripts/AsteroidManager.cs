@@ -11,6 +11,13 @@ public class AsteroidManager : MonoBehaviour
 	private int maxSize = 3;
 	private int nrSubAsteroids = 2;
 
+	private EventManager eventManager;
+
+	public void Initialize(EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+
 	public void SpawnAsteroids()
 	{
 		for (var i = 0; i < nrSpawningAsteroids; ++i)
@@ -36,7 +43,8 @@ public class AsteroidManager : MonoBehaviour
 
 		GameObject asteroidInstance = Instantiate(asteroidPrefab, position, Quaternion.identity);
 		Asteroid asteroid = asteroidInstance.GetComponent<Asteroid>();
-		asteroid.Initialize(size, velocity);
+		//asteroid.Initialize(size, velocity);
+		asteroid.Initialize(size, velocity, this.eventManager);
 		this.asteroids.Add(asteroidInstance);
 	}
 
