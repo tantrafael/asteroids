@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class Shot : MonoBehaviour
 {
@@ -9,8 +8,8 @@ public class Shot : MonoBehaviour
 
 	public void Initialize(ColliderType colliderType, Vector2 velocity, EventManager eventManager)
 	{
-		Collider collider = this.GetComponent<Collider>();
-		collider.Initialize(colliderType, eventManager);
+		CollisionDetector collisionDetector = this.GetComponent<CollisionDetector>();
+		collisionDetector.Initialize(colliderType, eventManager);
 
 		Rigidbody2D body = this.GetComponent<Rigidbody2D>();
 		body.velocity = velocity;

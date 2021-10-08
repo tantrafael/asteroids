@@ -16,15 +16,6 @@ public class EnemyShip : MonoBehaviour
 	private void Awake()
 	{
 		this.body = this.GetComponent<Rigidbody2D>();
-
-		/*
-		Collider collider = this.GetComponent<Collider>();
-
-		if (collider)
-		{
-			collider.Initialize(ColliderType.EnemyShip);
-		}
-		*/
 	}
 
 	private void Start()
@@ -35,7 +26,6 @@ public class EnemyShip : MonoBehaviour
 		this.StartCoroutine(this.ControlMovement());
 	}
 
-	//public void Initialize(int size, float difficulty, int direction, ShotManager shotManager)
 	public void Initialize(int size, float difficulty, int direction, EventManager eventManager, ShotManager shotManager)
 	{
 		this.size = size;
@@ -45,12 +35,11 @@ public class EnemyShip : MonoBehaviour
 		this.eventManager = eventManager;
 		this.shotManager = shotManager;
 
-		Collider collider = this.GetComponent<Collider>();
+		CollisionDetector collisionDetector = this.GetComponent<CollisionDetector>();
 
-		if (collider)
+		if (collisionDetector)
 		{
-			//collider.Initialize(ColliderType.EnemyShip);
-			collider.Initialize(ColliderType.EnemyShip, this.eventManager);
+			collisionDetector.Initialize(ColliderType.EnemyShip, this.eventManager);
 		}
 	}
 

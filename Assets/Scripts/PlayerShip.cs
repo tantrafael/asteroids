@@ -29,26 +29,18 @@ public class PlayerShip : MonoBehaviour
 
 		this.translatingBody = this.gameObject.AddComponent<TranslatingBody>();
 		this.translatingBody.Initialize(mass, drag);
-
-		Collider collider = this.GetComponent<Collider>();
-
-		if (collider)
-		{
-			//collider.Initialize(ColliderType.PlayerShip);
-		}
 	}
 
-	//public void Initialize(ShotManager shotManager)
 	public void Initialize(EventManager eventManager, ShotManager shotManager)
 	{
 		this.eventManager = eventManager;
 		this.shotManager = shotManager;
 
-		Collider collider = this.GetComponent<Collider>();
+		CollisionDetector collisionDetector = this.GetComponent<CollisionDetector>();
 
-		if (collider)
+		if (collisionDetector)
 		{
-			collider.Initialize(ColliderType.PlayerShip, this.eventManager);
+			collisionDetector.Initialize(ColliderType.PlayerShip, this.eventManager);
 		}
 	}
 
@@ -81,7 +73,6 @@ public class PlayerShip : MonoBehaviour
 
 	private void HandleFireInput()
 	{
-		//bool fireButtonInput = Input.GetButton("Fire1");
 		bool fireButtonInput = Input.GetKeyDown("space");
 
 		if (fireButtonInput == true)

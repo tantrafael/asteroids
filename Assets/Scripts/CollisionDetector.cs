@@ -18,7 +18,7 @@ struct CollisionData
 	public GameObject other;
 }
 
-public class Collider : MonoBehaviour
+public class CollisionDetector : MonoBehaviour
 {
 	// Lookup table for collisions that cause events.
 	private static readonly CollisionEventTable collisionEventTable = new CollisionEventTable
@@ -42,7 +42,7 @@ public class Collider : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		Collider otherCollider = other.gameObject.GetComponent<Collider>();
+		CollisionDetector otherCollider = other.gameObject.GetComponent<CollisionDetector>();
 
 		if (!otherCollider)
 		{
@@ -51,7 +51,7 @@ public class Collider : MonoBehaviour
 
 		CollisionPair collisionPair = new CollisionPair(this.Type, otherCollider.Type);
 		GameEvent gameEvent;
-		bool isCausingEvent = Collider.collisionEventTable.TryGetValue(collisionPair, out gameEvent);
+		bool isCausingEvent = CollisionDetector.collisionEventTable.TryGetValue(collisionPair, out gameEvent);
 
 		if (isCausingEvent)
 		{
