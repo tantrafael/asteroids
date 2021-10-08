@@ -6,19 +6,12 @@ public class Asteroid : MonoBehaviour
 
 	private void Awake()
 	{
-		/*
-		Collider collider = this.gameObject.AddComponent<Collider>();
-		collider.Initialize(ColliderType.Asteroid);
-		*/
-
 		Collider collider = this.GetComponent<Collider>();
 
 		if (collider)
 		{
 			collider.Initialize(ColliderType.Asteroid);
 		}
-
-		//this.gameObject.AddComponent<ScreenWrapper>();
 	}
 
 	public int Size

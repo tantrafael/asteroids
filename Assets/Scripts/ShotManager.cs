@@ -5,6 +5,7 @@ using UnityEngine;
 public class ShotManager : MonoBehaviour
 {
 	public GameObject shotPrefab;
+	public float speed;
 	public float maxDistance;
 
 	private List<GameObject> shots;
@@ -17,7 +18,7 @@ public class ShotManager : MonoBehaviour
 
 	public void Shoot(ColliderType colliderType, Vector2 position, Vector2 velocity)
 	{
-		Debug.Log("ShotManager::Shoot");
+		//Debug.Log("ShotManager::Shoot");
 		Assert.IsNotNull(this.shotPrefab);
 
 		Quaternion rotation = Quaternion.LookRotation(Vector3.forward, velocity);
@@ -54,7 +55,7 @@ public class ShotManager : MonoBehaviour
 
 	public void DeleteShot(GameObject shotInstance)
 	{
-		Debug.Log("ShotManager::DeleteShot");
+		//Debug.Log("ShotManager::DeleteShot");
 		this.shots.Remove(shotInstance);
 		Destroy(shotInstance);
 	}

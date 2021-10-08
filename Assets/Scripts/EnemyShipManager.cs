@@ -12,7 +12,6 @@ public class EnemyShipManager : MonoBehaviour
 	private Camera mainCamera;
 	private List<GameObject> enemyShips;
 
-	//private UnityAction<object> enemyShipHitByShotAction;
 	private UnityAction<object> enemyShipOutOfScopeAction;
 
 	private ShotManager shotManager;
@@ -22,13 +21,11 @@ public class EnemyShipManager : MonoBehaviour
 		this.mainCamera = Camera.main;
 		this.enemyShips = new List<GameObject>();
 
-		//this.enemyShipHitByShotAction = new UnityAction<object>(this.HandleEnemyShipHitByShot);
 		this.enemyShipOutOfScopeAction = new UnityAction<object>(this.HandleEnemyShipOutOfScope);
 	}
 
 	private void Start()
 	{
-		//EventManager.StartListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
 		EventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.ScheduleNextEnemyShip();
@@ -66,22 +63,11 @@ public class EnemyShipManager : MonoBehaviour
 		this.enemyShips.Add(enemyShipInstance);
 	}
 
-	public void HandleEnemyShipHitByShot(GameObject enemyShipInstance)
+	public void HandleEnemyShipHit(GameObject enemyShipInstance)
 	{
 		this.DeleteEnemyShip(enemyShipInstance);
 		this.ScheduleNextEnemyShip();
 	}
-
-	/*
-	public void HandleEnemyShipHitByShot(object data)
-	{
-		CollisionData collisionData = (CollisionData)data;
-		GameObject enemyShipInstance = collisionData.other;
-
-		this.DeleteEnemyShip(enemyShipInstance);
-		this.ScheduleNextEnemyShip();
-	}
-	*/
 
 	public void HandleEnemyShipOutOfScope(object data)
 	{
@@ -98,7 +84,6 @@ public class EnemyShipManager : MonoBehaviour
 
 	private IEnumerator ControlEnemyShipSpawning(float delay)
 	{
-		// TODO: Remove magic number.
 		yield return new WaitForSeconds(delay);
 		this.SpawnEnemyShip();
 	}
@@ -139,7 +124,6 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		//EventManager.StopListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
 		EventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.StopAllCoroutines();

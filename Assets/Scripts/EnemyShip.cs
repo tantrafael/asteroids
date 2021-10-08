@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
 {
+	public float shotSpeed = 6.0f;
+
 	private int size;
 	private float difficulty;
 	private float speed;
@@ -35,7 +37,6 @@ public class EnemyShip : MonoBehaviour
 		this.StopAllCoroutines();
 	}
 
-	//public void Initialize(int size, float difficulty, int direction)
 	public void Initialize(int size, float difficulty, int direction, ShotManager shotManager)
 	{
 		this.size = size;
@@ -68,10 +69,9 @@ public class EnemyShip : MonoBehaviour
 	private void Shoot()
 	{
 		Vector2 position = this.transform.position;
-		//Vector2 velocity = 5.0f * this.transform.up;
 		float angle = Random.value * 2 * Mathf.PI;
 		Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-		Vector2 velocity = 5.0f * direction;
+		Vector2 velocity = this.shotSpeed * direction;
 		this.shotManager.Shoot(ColliderType.EnemyShot, position, velocity);
 	}
 

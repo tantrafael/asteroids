@@ -13,6 +13,7 @@ public class PlayerShip : MonoBehaviour
 	public float thrustInputCoefficient;
 
 	public GameObject shotPrefab;
+	public float shotSpeed = 6.0f;
 
 	public delegate void CollisionAction(GameObject gameObject, GameObject other);
 	public static event CollisionAction OnCollision;
@@ -79,20 +80,10 @@ public class PlayerShip : MonoBehaviour
 		}
 	}
 
-	/*
-	public void Shoot()
-	{
-		Vector3 position = this.transform.position;
-		Quaternion rotation = this.transform.rotation;
-		Instantiate(shotPrefab, position, rotation);
-	}
-	*/
-
 	public void Shoot()
 	{
 		Vector2 position = this.transform.position;
-		//Vector2 direction = this.transform.up;
-		Vector2 velocity = 5.0f * this.transform.up;
+		Vector2 velocity = this.shotSpeed * this.transform.up;
 		this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
 	}
 

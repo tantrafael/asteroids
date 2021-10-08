@@ -26,7 +26,8 @@ public class Collider : MonoBehaviour
 		[new CollisionPair(ColliderType.Asteroid, ColliderType.PlayerShot)] = GameEvent.AsteroidHitByPlayerShot,
 		[new CollisionPair(ColliderType.EnemyShip, ColliderType.PlayerShot)] = GameEvent.EnemyShipHitByPlayerShot,
 		[new CollisionPair(ColliderType.PlayerShip, ColliderType.Asteroid)] = GameEvent.PlayerShipHitByAsteroid,
-		[new CollisionPair(ColliderType.PlayerShip, ColliderType.EnemyShot)] = GameEvent.PlayerShipHitByEnemyShot
+		[new CollisionPair(ColliderType.PlayerShip, ColliderType.EnemyShot)] = GameEvent.PlayerShipHitByEnemyShot,
+		[new CollisionPair(ColliderType.PlayerShip, ColliderType.EnemyShip)] = GameEvent.PlayerShipHitByEnemyShip
 	};
 
 	public ColliderType Type { get; private set; }
