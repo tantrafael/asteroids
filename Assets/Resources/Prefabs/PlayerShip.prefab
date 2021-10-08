@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4585651914172265882}
   - component: {fileID: 2376915312196208498}
   - component: {fileID: 8970279022445527431}
+  - component: {fileID: 2683033957613609844}
   - component: {fileID: 9207540946080413737}
   - component: {fileID: 4972641157382106354}
   m_Layer: 0
@@ -44,7 +45,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6335160174696095831}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -155,6 +156,19 @@ MonoBehaviour:
   drag: 0.3
   thrustInputCoefficient: 8
   shotPrefab: {fileID: 1641144602838454356, guid: 642bf7b62a1bb406db3bcd29b245ca48, type: 3}
+  shotSpeed: 6
+--- !u!114 &2683033957613609844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335160174696095831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869fb168144c94be687a54f12e3b0a98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &9207540946080413737
 MonoBehaviour:
   m_ObjectHideFlags: 0

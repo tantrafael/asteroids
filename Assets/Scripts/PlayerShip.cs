@@ -18,17 +18,15 @@ public class PlayerShip : MonoBehaviour
 	public delegate void CollisionAction(GameObject gameObject, GameObject other);
 	public static event CollisionAction OnCollision;
 
-	private RotatingBody rotatingBody;
-	private TranslatingBody translatingBody;
+	private Rigidbody2D body;
+	private Rotator rotator;
 	private EventManager eventManager;
 	private ShotManager shotManager;
 
 	private void Awake()
 	{
-		this.rotatingBody = this.gameObject.AddComponent<RotatingBody>();
-
-		this.translatingBody = this.gameObject.AddComponent<TranslatingBody>();
-		this.translatingBody.Initialize(mass, drag);
+		this.body = this.GetComponent<Rigidbody2D>();
+		this.rotator = this.GetComponent<Rotator>();
 	}
 
 	public void Initialize(EventManager eventManager, ShotManager shotManager)
@@ -56,7 +54,7 @@ public class PlayerShip : MonoBehaviour
 	{
 		float horizontalInput = Input.GetAxis("Horizontal");
 		float torque = -rotationInputCoefficient * horizontalInput;
-		this.rotatingBody.ApplyTorque(torque);
+		this.rotator.ApplyTorque(torque);
 	}
 
 	private void HandleThrustInput()
@@ -67,7 +65,7 @@ public class PlayerShip : MonoBehaviour
 		{
 			float thrustMagnitude = this.thrustInputCoefficient * verticalInput;
 			Vector2 force = thrustMagnitude * this.transform.up;
-			this.translatingBody.ApplyForce(force);
+			this.body.AddForce(force);
 		}
 	}
 

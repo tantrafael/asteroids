@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotatingBody : MonoBehaviour
+public class Rotator : MonoBehaviour
 {
 	private Rigidbody2D body;
 	private float appliedTorque;
