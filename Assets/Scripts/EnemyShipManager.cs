@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+//using System.Threading;
+//using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -14,6 +16,8 @@ public class EnemyShipManager : MonoBehaviour
 
 	private UnityAction<object> enemyShipLeftScopeAction;
 
+	//private CancellationTokenSource source;
+
 	private void Awake()
 	{
 		this.mainCamera = Camera.main;
@@ -24,7 +28,13 @@ public class EnemyShipManager : MonoBehaviour
 	private void Start()
 	{
 		EventManager.StartListening(GameEvent.EnemyShipLeftScope, this.enemyShipLeftScopeAction);
+
 		this.ScheduleNextEnemyShip();
+
+		/*
+		this.source = new CancellationTokenSource();
+		this.ScheduleNextEnemyShip(this.source.Token);
+		*/
 	}
 
 	public void SpawnEnemyShip()
@@ -57,6 +67,7 @@ public class EnemyShipManager : MonoBehaviour
 	{
 		this.DeleteEnemyShip(enemyShipInstance);
 		this.ScheduleNextEnemyShip();
+		//this.ScheduleNextEnemyShip(this.source.Token);
 	}
 
 	public void HandleEnemyShipLeftScope(object data)
@@ -64,14 +75,41 @@ public class EnemyShipManager : MonoBehaviour
 		GameObject enemyShipInstance = (GameObject)data;
 		this.DeleteEnemyShip(enemyShipInstance);
 		this.ScheduleNextEnemyShip();
+		//this.ScheduleNextEnemyShip(this.source.Token);
 	}
 
-	private async void ScheduleNextEnemyShip()
+	private void ScheduleNextEnemyShip()
+	{
+		float timeUntilSpawning = 5.0f;
+		this.StartCoroutine(this.ControlEnemyShipSpawning(timeUntilSpawning));
+	}
+
+	private IEnumerator ControlEnemyShipSpawning(float delay)
 	{
 		// TODO: Remove magic number.
-		await Task.Delay(System.TimeSpan.FromSeconds(5.0f));
+		yield return new WaitForSeconds(delay);
 		this.SpawnEnemyShip();
 	}
+
+	/*
+	private async void ScheduleNextEnemyShip(CancellationToken cancellationToken)
+	{
+		// TODO: Remove magic number.
+		//this.SpawnEnemyShip();
+
+		try
+		{
+			// TODO: Remove magic number.
+			await Task.Delay(System.TimeSpan.FromSeconds(5));
+			cancellationToken.ThrowIfCancellationRequested();
+			this.SpawnEnemyShip();
+		}
+		catch (System.OperationCanceledException)
+		{
+			Debug.Log("OperationCanceledException");
+		}
+	}
+	*/
 
 	private void FixedUpdate()
 	{
@@ -103,5 +141,10 @@ public class EnemyShipManager : MonoBehaviour
 	{
 		this.enemyShips.Remove(enemyShipInstance);
 		Destroy(enemyShipInstance);
+	}
+
+	private void OnDestroy()
+	{
+		this.StopAllCoroutines();
 	}
 }

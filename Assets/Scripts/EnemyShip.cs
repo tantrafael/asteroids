@@ -1,5 +1,6 @@
+//using System.Threading;
+//using System.Threading.Tasks;
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class EnemyShip : MonoBehaviour
@@ -9,6 +10,7 @@ public class EnemyShip : MonoBehaviour
 	private float speed;
 	private Vector2 direction;
 	private Rigidbody2D body;
+	//private CancellationTokenSource source;
 
 	private void Awake()
 	{
@@ -22,6 +24,22 @@ public class EnemyShip : MonoBehaviour
 		}
 	}
 
+	private void Start()
+	{
+		this.body.velocity = speed * this.direction;
+
+		this.StartCoroutine(this.ControlMovement());
+
+		//this.source = new CancellationTokenSource();
+		//this.ControlMovement(this.source.Token);
+	}
+
+	private void OnDestroy()
+	{
+		this.StopAllCoroutines();
+		//this.source.Cancel();
+	}
+
 	public void Initialize(int size, float difficulty, int direction)
 	{
 		this.size = size;
@@ -30,22 +48,39 @@ public class EnemyShip : MonoBehaviour
 		this.speed = 4.0f * difficulty;
 	}
 
-	private void Start()
-	{
-		this.body.velocity = speed * this.direction;
-
-		this.ControlMovement();
-	}
-
-	private async void ControlMovement()
+	private IEnumerator ControlMovement()
 	{
 		while (true)
 		{
 			// TODO: Remove magic number.
-			await Task.Delay(System.TimeSpan.FromSeconds(5.0));
+			yield return new WaitForSeconds(3.0f);
 			this.UpdateDirection();
 		}
 	}
+
+	/*
+	private async void ControlMovement(CancellationToken cancellationToken)
+	{
+		while (true)
+		{
+			try
+			{
+				// TODO: Remove magic number.
+				await Task.Delay(System.TimeSpan.FromSeconds(3), cancellationToken);
+				cancellationToken.ThrowIfCancellationRequested();
+				this.UpdateDirection();
+			}
+			catch (System.OperationCanceledException)
+			{
+				break;
+			}
+
+			await Task.Delay(System.TimeSpan.FromSeconds(3), cancellationToken);
+			cancellationToken.ThrowIfCancellationRequested();
+			this.UpdateDirection();
+		}
+	}
+	*/
 
 	private void UpdateDirection()
 	{
