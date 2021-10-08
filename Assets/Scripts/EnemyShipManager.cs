@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-//using System.Threading;
-//using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -12,29 +10,33 @@ public class EnemyShipManager : MonoBehaviour
 	public int maxConcurrentEnemyShips = 1;
 
 	private Camera mainCamera;
-	private List<GameObject> enemyShips = new List<GameObject>();
+	private List<GameObject> enemyShips;
 
-	private UnityAction<object> enemyShipLeftScopeAction;
+	//private UnityAction<object> enemyShipHitByShotAction;
+	private UnityAction<object> enemyShipOutOfScopeAction;
 
-	//private CancellationTokenSource source;
+	private ShotManager shotManager;
 
 	private void Awake()
 	{
 		this.mainCamera = Camera.main;
+		this.enemyShips = new List<GameObject>();
 
-		this.enemyShipLeftScopeAction = new UnityAction<object>(this.HandleEnemyShipLeftScope);
+		//this.enemyShipHitByShotAction = new UnityAction<object>(this.HandleEnemyShipHitByShot);
+		this.enemyShipOutOfScopeAction = new UnityAction<object>(this.HandleEnemyShipOutOfScope);
 	}
 
 	private void Start()
 	{
-		EventManager.StartListening(GameEvent.EnemyShipLeftScope, this.enemyShipLeftScopeAction);
+		//EventManager.StartListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
+		EventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
 
 		this.ScheduleNextEnemyShip();
+	}
 
-		/*
-		this.source = new CancellationTokenSource();
-		this.ScheduleNextEnemyShip(this.source.Token);
-		*/
+	public void Initialize(ShotManager shotManager)
+	{
+		this.shotManager = shotManager;
 	}
 
 	public void SpawnEnemyShip()
@@ -57,9 +59,10 @@ public class EnemyShipManager : MonoBehaviour
 		viewportPosition.y = Random.value;
 		Vector2 worldPosition = this.mainCamera.ViewportToWorldPoint(viewportPosition);
 
-		GameObject enemyShipInstance = Instantiate(enemyShipPrefab, worldPosition, Quaternion.identity);
+		GameObject enemyShipInstance = Instantiate(this.enemyShipPrefab, worldPosition, Quaternion.identity);
 		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
-		enemyShip.Initialize(size, difficulty, direction);
+		//enemyShip.Initialize(size, difficulty, direction);
+		enemyShip.Initialize(size, difficulty, direction, this.shotManager);
 		this.enemyShips.Add(enemyShipInstance);
 	}
 
@@ -67,15 +70,24 @@ public class EnemyShipManager : MonoBehaviour
 	{
 		this.DeleteEnemyShip(enemyShipInstance);
 		this.ScheduleNextEnemyShip();
-		//this.ScheduleNextEnemyShip(this.source.Token);
 	}
 
-	public void HandleEnemyShipLeftScope(object data)
+	/*
+	public void HandleEnemyShipHitByShot(object data)
+	{
+		CollisionData collisionData = (CollisionData)data;
+		GameObject enemyShipInstance = collisionData.other;
+
+		this.DeleteEnemyShip(enemyShipInstance);
+		this.ScheduleNextEnemyShip();
+	}
+	*/
+
+	public void HandleEnemyShipOutOfScope(object data)
 	{
 		GameObject enemyShipInstance = (GameObject)data;
 		this.DeleteEnemyShip(enemyShipInstance);
 		this.ScheduleNextEnemyShip();
-		//this.ScheduleNextEnemyShip(this.source.Token);
 	}
 
 	private void ScheduleNextEnemyShip()
@@ -91,44 +103,26 @@ public class EnemyShipManager : MonoBehaviour
 		this.SpawnEnemyShip();
 	}
 
-	/*
-	private async void ScheduleNextEnemyShip(CancellationToken cancellationToken)
-	{
-		// TODO: Remove magic number.
-		//this.SpawnEnemyShip();
-
-		try
-		{
-			// TODO: Remove magic number.
-			await Task.Delay(System.TimeSpan.FromSeconds(5));
-			cancellationToken.ThrowIfCancellationRequested();
-			this.SpawnEnemyShip();
-		}
-		catch (System.OperationCanceledException)
-		{
-			Debug.Log("OperationCanceledException");
-		}
-	}
-	*/
-
+	// TODO: Consider handling this in a coroutine.
 	private void FixedUpdate()
 	{
+		// TODO: Consider perfomance.
 		List<GameObject> enemyShipsOutOfScope = new List<GameObject>();
 
-		foreach (GameObject enemyShip in enemyShips)
+		foreach (GameObject enemyShipInstance in this.enemyShips)
 		{
-			Vector2 worldPosition = enemyShip.transform.position;
+			Vector2 worldPosition = enemyShipInstance.transform.position;
 			Vector2 viewportPosition = this.mainCamera.WorldToViewportPoint(worldPosition);
 
 			if (!this.IsWithinScope(viewportPosition))
 			{
-				enemyShipsOutOfScope.Add(enemyShip);
+				enemyShipsOutOfScope.Add(enemyShipInstance);
 			}
 		}
 
-		foreach (GameObject enemyShip in enemyShipsOutOfScope)
+		foreach (GameObject enemyShipInstance in enemyShipsOutOfScope)
 		{
-			EventManager.TriggerEvent(GameEvent.EnemyShipLeftScope, enemyShip);
+			EventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
 		}
 	}
 
@@ -145,6 +139,9 @@ public class EnemyShipManager : MonoBehaviour
 
 	private void OnDestroy()
 	{
+		//EventManager.StopListening(GameEvent.EnemyShipHitByShot, this.enemyShipHitByShotAction);
+		EventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
+
 		this.StopAllCoroutines();
 	}
 }

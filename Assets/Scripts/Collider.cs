@@ -7,8 +7,9 @@ public enum ColliderType
 {
 	Asteroid,
 	PlayerShip,
+	PlayerShot,
 	EnemyShip,
-	Shot
+	EnemyShot
 };
 
 struct CollisionData
@@ -22,9 +23,10 @@ public class Collider : MonoBehaviour
 	// Lookup table for collisions that cause events.
 	private static readonly CollisionEventTable collisionEventTable = new CollisionEventTable
 	{
-		[new CollisionPair(ColliderType.Asteroid, ColliderType.Shot)] = GameEvent.AsteroidHitByShot,
-		[new CollisionPair(ColliderType.EnemyShip, ColliderType.Shot)] = GameEvent.EnemyShipHitByShot,
-		[new CollisionPair(ColliderType.PlayerShip, ColliderType.Asteroid)] = GameEvent.PlayerShipHitByAsteroid
+		[new CollisionPair(ColliderType.Asteroid, ColliderType.PlayerShot)] = GameEvent.AsteroidHitByPlayerShot,
+		[new CollisionPair(ColliderType.EnemyShip, ColliderType.PlayerShot)] = GameEvent.EnemyShipHitByPlayerShot,
+		[new CollisionPair(ColliderType.PlayerShip, ColliderType.Asteroid)] = GameEvent.PlayerShipHitByAsteroid,
+		[new CollisionPair(ColliderType.PlayerShip, ColliderType.EnemyShot)] = GameEvent.PlayerShipHitByEnemyShot
 	};
 
 	public ColliderType Type { get; private set; }

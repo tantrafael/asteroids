@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 public enum GameEvent
 {
-	AsteroidHitByShot,
-	EnemyShipHitByShot,
+	AsteroidHitByPlayerShot,
+	EnemyShipHitByPlayerShot,
 	PlayerShipHitByAsteroid,
+	PlayerShipHitByEnemyShot,
 	PlayerShipHitByEnemyShip,
-	EnemyShipLeftScope
+	EnemyShipOutOfScope
 };
 
 [System.Serializable]

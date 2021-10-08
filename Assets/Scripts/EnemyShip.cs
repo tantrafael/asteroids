@@ -1,5 +1,3 @@
-//using System.Threading;
-//using System.Threading.Tasks;
 using System.Collections;
 using UnityEngine;
 
@@ -10,7 +8,7 @@ public class EnemyShip : MonoBehaviour
 	private float speed;
 	private Vector2 direction;
 	private Rigidbody2D body;
-	//private CancellationTokenSource source;
+	private ShotManager shotManager;
 
 	private void Awake()
 	{
@@ -28,24 +26,33 @@ public class EnemyShip : MonoBehaviour
 	{
 		this.body.velocity = speed * this.direction;
 
+		this.StartCoroutine(this.ControlShooting());
 		this.StartCoroutine(this.ControlMovement());
-
-		//this.source = new CancellationTokenSource();
-		//this.ControlMovement(this.source.Token);
 	}
 
 	private void OnDestroy()
 	{
 		this.StopAllCoroutines();
-		//this.source.Cancel();
 	}
 
-	public void Initialize(int size, float difficulty, int direction)
+	//public void Initialize(int size, float difficulty, int direction)
+	public void Initialize(int size, float difficulty, int direction, ShotManager shotManager)
 	{
 		this.size = size;
 		this.difficulty = difficulty;
 		this.direction = (direction == 1) ? Vector2.right : Vector2.left;
 		this.speed = 4.0f * difficulty;
+		this.shotManager = shotManager;
+	}
+
+	private IEnumerator ControlShooting()
+	{
+		while (true)
+		{
+			// TODO: Remove magic number.
+			yield return new WaitForSeconds(1.0f);
+			this.Shoot();
+		}
 	}
 
 	private IEnumerator ControlMovement()
@@ -58,29 +65,15 @@ public class EnemyShip : MonoBehaviour
 		}
 	}
 
-	/*
-	private async void ControlMovement(CancellationToken cancellationToken)
+	private void Shoot()
 	{
-		while (true)
-		{
-			try
-			{
-				// TODO: Remove magic number.
-				await Task.Delay(System.TimeSpan.FromSeconds(3), cancellationToken);
-				cancellationToken.ThrowIfCancellationRequested();
-				this.UpdateDirection();
-			}
-			catch (System.OperationCanceledException)
-			{
-				break;
-			}
-
-			await Task.Delay(System.TimeSpan.FromSeconds(3), cancellationToken);
-			cancellationToken.ThrowIfCancellationRequested();
-			this.UpdateDirection();
-		}
+		Vector2 position = this.transform.position;
+		//Vector2 velocity = 5.0f * this.transform.up;
+		float angle = Random.value * 2 * Mathf.PI;
+		Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+		Vector2 velocity = 5.0f * direction;
+		this.shotManager.Shoot(ColliderType.EnemyShot, position, velocity);
 	}
-	*/
 
 	private void UpdateDirection()
 	{

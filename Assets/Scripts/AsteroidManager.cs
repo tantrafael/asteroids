@@ -15,13 +15,10 @@ public class AsteroidManager : MonoBehaviour
 	{
 		for (var i = 0; i < nrSpawningAsteroids; ++i)
 		{
-			float angle;
-			Vector2 direction = Vector2.zero;
 			int size = maxSize;
 
-			angle = Random.value * 2 * Mathf.PI;
-			direction.x = Mathf.Cos(angle);
-			direction.y = Mathf.Sin(angle);
+			float angle = Random.value * 2 * Mathf.PI;
+			Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 			// TODO: Remove magic number.
 			Vector2 position = 6.0f * direction;
 
@@ -32,9 +29,7 @@ public class AsteroidManager : MonoBehaviour
 	public void SpawnAsteroid(int size, Vector2 position)
 	{
 		float angle = Random.value * 2 * Mathf.PI;
-		Vector2 direction = Vector2.zero;
-		direction.x = Mathf.Cos(angle);
-		direction.y = Mathf.Sin(angle);
+		Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		// TODO: Remove magic numbers.
 		float speed = Random.Range(2.0f, 3.0f) / size;
 		Vector2 velocity = speed * direction;
@@ -45,7 +40,7 @@ public class AsteroidManager : MonoBehaviour
 		this.asteroids.Add(asteroidInstance);
 	}
 
-	public void HandleAsteroidHitByShot(GameObject asteroidInstance)
+	public void HandleAsteroidHit(GameObject asteroidInstance)
 	{
 		Asteroid asteroid = asteroidInstance.GetComponent<Asteroid>();
 		Vector2 position = asteroidInstance.transform.position;
@@ -53,7 +48,7 @@ public class AsteroidManager : MonoBehaviour
 		this.asteroids.Remove(asteroidInstance);
 		Destroy(asteroidInstance);
 
-		// TODO: Remove magic number.
+		// TODO: Remove magic numbers.
 		if (asteroid.Size > 1)
 		{
 			int size = asteroid.Size - 1;

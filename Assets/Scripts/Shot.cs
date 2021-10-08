@@ -1,39 +1,62 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class Shot : MonoBehaviour
 {
-	public float speed;
-	public float maximumDistance;
-	private float traveledDistance;
+	//public float speed;
+	//public float maxDistance;
+	//private ColliderType colliderType;
+	private float speed;
+	private Collider colliderComponent;
+	//private Rigidbody2D body;
+
+	public float TraveledDistance { get; private set; }
 
 	private void Awake()
 	{
-		/*
-		Collider collider = this.gameObject.AddComponent<Collider>();
-		collider.Initialize(ColliderType.Shot);
-		*/
+		//this.body = this.GetComponent<Rigidbody2D>();
 
+		/*
 		Collider collider = this.GetComponent<Collider>();
+		Assert.IsNotNull(collider);
 
 		if (collider)
 		{
-			collider.Initialize(ColliderType.Shot);
+			collider.Initialize(ColliderType.PlayerShot);
 		}
+		*/
+
+		this.colliderComponent = this.GetComponent<Collider>();
 	}
 
+	/*
 	private void Start()
 	{
 		Rigidbody2D rigidbody2D = this.GetComponent<Rigidbody2D>();
 		rigidbody2D.velocity = this.speed * this.transform.up;
 	}
+	*/
+
+	public void Initialize(ColliderType colliderType, Vector2 velocity)
+	{
+		//Debug.Log("Shot::Initialize");
+		//this.colliderType = colliderType;
+		this.colliderComponent.Initialize(colliderType);
+
+		Rigidbody2D body = this.GetComponent<Rigidbody2D>();
+		body.velocity = velocity;
+		this.speed = velocity.magnitude;
+	}
 
 	private void FixedUpdate()
 	{
-		this.traveledDistance += this.speed * Time.fixedDeltaTime;
+		this.TraveledDistance += this.speed * Time.fixedDeltaTime;
 
+		/*
 		if (this.traveledDistance >= maximumDistance)
 		{
 			Destroy(this.gameObject);
 		}
+		*/
 	}
 }

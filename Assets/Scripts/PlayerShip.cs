@@ -19,6 +19,7 @@ public class PlayerShip : MonoBehaviour
 
 	private RotatingBody rotatingBody;
 	private TranslatingBody translatingBody;
+	private ShotManager shotManager;
 
 	private void Awake()
 	{
@@ -27,19 +28,17 @@ public class PlayerShip : MonoBehaviour
 		this.translatingBody = this.gameObject.AddComponent<TranslatingBody>();
 		this.translatingBody.Initialize(mass, drag);
 
-		/*
-		Collider collider = this.gameObject.AddComponent<Collider>();
-		collider.Initialize(ColliderType.PlayerShip);
-		*/
-
 		Collider collider = this.GetComponent<Collider>();
 
 		if (collider)
 		{
 			collider.Initialize(ColliderType.PlayerShip);
 		}
+	}
 
-		//this.gameObject.AddComponent<ScreenWrapper>();
+	public void Initialize(ShotManager shotManager)
+	{
+		this.shotManager = shotManager;
 	}
 
 	private void Update()
@@ -80,11 +79,21 @@ public class PlayerShip : MonoBehaviour
 		}
 	}
 
+	/*
 	public void Shoot()
 	{
 		Vector3 position = this.transform.position;
 		Quaternion rotation = this.transform.rotation;
 		Instantiate(shotPrefab, position, rotation);
+	}
+	*/
+
+	public void Shoot()
+	{
+		Vector2 position = this.transform.position;
+		//Vector2 direction = this.transform.up;
+		Vector2 velocity = 5.0f * this.transform.up;
+		this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
