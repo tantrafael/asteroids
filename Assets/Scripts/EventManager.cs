@@ -8,7 +8,7 @@ public enum GameEvent
 	PlayerShipHitByAsteroid,
 	PlayerShipHitByEnemyShot,
 	PlayerShipHitByEnemyShip,
-	EnemyShipOutOfScope
+	//EnemyShipOutOfScope
 };
 
 [System.Serializable]

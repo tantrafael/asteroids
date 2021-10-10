@@ -33,7 +33,8 @@ public class AsteroidManager : MonoBehaviour
 		}
 	}
 
-	public void SpawnAsteroid(int size, Vector2 position)
+	//public void SpawnAsteroid(int size, Vector2 position)
+	public GameObject SpawnAsteroid(int size, Vector2 position)
 	{
 		float angle = Random.value * 2 * Mathf.PI;
 		Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
@@ -45,6 +46,8 @@ public class AsteroidManager : MonoBehaviour
 		Asteroid asteroid = asteroidInstance.GetComponent<Asteroid>();
 		asteroid.Initialize(size, velocity, this.eventManager);
 		this.asteroids.Add(asteroidInstance);
+
+		return asteroidInstance;
 	}
 
 	public void HandleAsteroidHit(GameObject asteroidInstance)
@@ -64,6 +67,17 @@ public class AsteroidManager : MonoBehaviour
 			{
 				this.SpawnAsteroid(size, position);
 			}
+		}
+	}
+
+	//public void Dispose()
+	private void OnDestroy()
+	{
+		for (var i = this.asteroids.Count - 1; i >= 0; --i)
+		{
+			GameObject asteroidInstance = this.asteroids[i];
+			this.asteroids.RemoveAt(i);
+			Object.Destroy(asteroidInstance);
 		}
 	}
 }
