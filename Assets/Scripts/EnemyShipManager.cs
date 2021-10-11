@@ -12,8 +12,6 @@ public class EnemyShipManager : MonoBehaviour
 	private Camera mainCamera;
 	private List<GameObject> enemyShips;
 
-	//private UnityAction<object> enemyShipOutOfScopeAction;
-
 	private EventManager eventManager;
 	private ShotManager shotManager;
 
@@ -21,21 +19,19 @@ public class EnemyShipManager : MonoBehaviour
 	{
 		this.mainCamera = Camera.main;
 		this.enemyShips = new List<GameObject>();
-
-		//this.enemyShipOutOfScopeAction = new UnityAction<object>(this.HandleEnemyShipOutOfScope);
-	}
-
-	private void Start()
-	{
-		this.ScheduleNextEnemyShip();
 	}
 
 	public void Initialize(EventManager eventManager, ShotManager shotManager)
 	{
 		this.eventManager = eventManager;
 		this.shotManager = shotManager;
+	}
 
-		//this.eventManager.StartListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
+	public void ScheduleEnemyShip()
+	{
+		// TODO: Remove magic number.
+		float timeUntilSpawning = 5.0f;
+		this.StartCoroutine(this.ControlEnemyShipSpawning(timeUntilSpawning));
 	}
 
 	public void SpawnEnemyShip()
@@ -66,22 +62,13 @@ public class EnemyShipManager : MonoBehaviour
 	public void HandleEnemyShipHit(GameObject enemyShipInstance)
 	{
 		this.DeleteEnemyShip(enemyShipInstance);
-		this.ScheduleNextEnemyShip();
+		this.ScheduleEnemyShip();
 	}
 
-	//public void HandleEnemyShipOutOfScope(object data)
 	private void HandleEnemyShipOutOfScope(GameObject enemyShipInstance)
 	{
-		//GameObject enemyShipInstance = (GameObject)data;
 		this.DeleteEnemyShip(enemyShipInstance);
-		this.ScheduleNextEnemyShip();
-	}
-
-	private void ScheduleNextEnemyShip()
-	{
-		// TODO: Remove magic number.
-		float timeUntilSpawning = 5.0f;
-		this.StartCoroutine(this.ControlEnemyShipSpawning(timeUntilSpawning));
+		this.ScheduleEnemyShip();
 	}
 
 	private IEnumerator ControlEnemyShipSpawning(float delay)
@@ -101,7 +88,6 @@ public class EnemyShipManager : MonoBehaviour
 
 			if (!this.IsWithinScope(viewportPosition))
 			{
-				//this.eventManager.TriggerEvent(GameEvent.EnemyShipOutOfScope, enemyShipInstance);
 				this.HandleEnemyShipOutOfScope(enemyShipInstance);
 			}
 		}
@@ -118,11 +104,20 @@ public class EnemyShipManager : MonoBehaviour
 		Destroy(enemyShipInstance);
 	}
 
-	//private void OnApplicationQuit()
+	public void ClearEnemyShips()
+	{
+		this.StopAllCoroutines();
+
+		for (var i = this.enemyShips.Count - 1; i >= 0; --i)
+		{
+			GameObject enemyShipInstance = this.enemyShips[i];
+			this.enemyShips.RemoveAt(i);
+			Object.Destroy(enemyShipInstance);
+		}
+	}
+
 	private void OnDestroy()
 	{
-		//this.eventManager.StopListening(GameEvent.EnemyShipOutOfScope, this.enemyShipOutOfScopeAction);
-
-		this.StopAllCoroutines();
+		this.ClearEnemyShips();
 	}
 }

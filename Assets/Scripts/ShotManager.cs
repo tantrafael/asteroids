@@ -54,4 +54,19 @@ public class ShotManager : MonoBehaviour
 		this.shots.Remove(shotInstance);
 		Destroy(shotInstance);
 	}
+
+	public void ClearShots()
+	{
+		for (var i = this.shots.Count - 1; i >= 0; --i)
+		{
+			GameObject shotInstance = this.shots[i];
+			this.shots.RemoveAt(i);
+			Object.Destroy(shotInstance);
+		}
+	}
+
+	private void OnDestroy()
+	{
+		this.ClearShots();
+	}
 }

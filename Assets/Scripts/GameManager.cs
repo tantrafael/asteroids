@@ -22,6 +22,16 @@ public class GameManager : MonoBehaviour
 	public int Lives { get; private set; }
 	public int Level { get; private set; }
 
+	public PlayerShip GetPlayerShip()
+	{
+		return this.playerShip;
+	}
+
+	public AsteroidManager GetAsteroidManager()
+	{
+		return this.asteroidManager;
+	}
+
 	private void Awake()
 	{
 		DontDestroyOnLoad(this.gameObject);
@@ -52,19 +62,36 @@ public class GameManager : MonoBehaviour
 		this.eventManager.StartListening(GameEvent.PlayerShipHitByAsteroid, this.playerShipHitByAsteroidAction);
 		this.eventManager.StartListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
 		this.eventManager.StartListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
+	}
 
+	private void Update()
+	{
+		bool startButtonInput = Input.GetKeyDown("return");
+
+		if (startButtonInput == true)
+		{
+			this.EndGame();
+			this.StartGame();
+		}
+	}
+
+	public void StartGame()
+	{
 		this.playerShip = this.SpawnPlayerShip();
 		this.asteroidManager.SpawnAsteroids();
+		this.enemyShipManager.ScheduleEnemyShip();
 	}
 
-	public PlayerShip GetPlayerShip()
+	public void EndGame()
 	{
-		return this.playerShip;
-	}
+		if (this.playerShip)
+		{
+			Destroy(this.playerShip.gameObject);
+		}
 
-	public AsteroidManager GetAsteroidManager()
-	{
-		return this.asteroidManager;
+		this.asteroidManager.ClearAsteroids();
+		this.enemyShipManager.ClearEnemyShips();
+		this.shotManager.ClearShots();
 	}
 
 	private PlayerShip SpawnPlayerShip()
@@ -122,7 +149,6 @@ public class GameManager : MonoBehaviour
 		Destroy(playerShip);
 	}
 
-	//private void OnApplicationQuit()
 	private void OnDestroy()
 	{
 		this.eventManager.StopListening(GameEvent.AsteroidHitByPlayerShot, this.asteroidHitByPlayerShotAction);
@@ -131,13 +157,6 @@ public class GameManager : MonoBehaviour
 		this.eventManager.StopListening(GameEvent.PlayerShipHitByEnemyShot, this.playerShipHitByEnemyShotAction);
 		this.eventManager.StopListening(GameEvent.PlayerShipHitByEnemyShip, this.playerShipHitByEnemyShipAction);
 
-		/*
-		if (this.playerShip)
-		{
-			Destroy(this.playerShip.gameObject);
-		}
-		*/
-
-		//this.asteroidManager.Dispose();
+		this.EndGame();
 	}
 }

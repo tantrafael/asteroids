@@ -24,6 +24,7 @@ public class AsteroidManager : MonoBehaviour
 		{
 			int size = maxSize;
 
+			// TODO: Position asteroids around the screen edges.
 			float angle = Random.value * 2 * Mathf.PI;
 			Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 			// TODO: Remove magic number.
@@ -33,7 +34,6 @@ public class AsteroidManager : MonoBehaviour
 		}
 	}
 
-	//public void SpawnAsteroid(int size, Vector2 position)
 	public GameObject SpawnAsteroid(int size, Vector2 position)
 	{
 		float angle = Random.value * 2 * Mathf.PI;
@@ -70,8 +70,7 @@ public class AsteroidManager : MonoBehaviour
 		}
 	}
 
-	//public void Dispose()
-	private void OnDestroy()
+	public void ClearAsteroids()
 	{
 		for (var i = this.asteroids.Count - 1; i >= 0; --i)
 		{
@@ -79,5 +78,10 @@ public class AsteroidManager : MonoBehaviour
 			this.asteroids.RemoveAt(i);
 			Object.Destroy(asteroidInstance);
 		}
+	}
+
+	private void OnDestroy()
+	{
+		this.ClearAsteroids();
 	}
 }
