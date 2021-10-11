@@ -16,7 +16,7 @@ An event manager is used. I find it a clean messaging system, letting things sta
 Object pooling would definitely be in place, with all spawning and destroying going on. I haven’t gotten around to it yet though.
 
 ### Testing
-Oh, the tests I had planned! Ever since attending a lecture on TDD some years ago, I’ve known that it’s the way to go. I did start with setting up a test suite and writing a test. But not sure about having the time to produce a playable game, I renegaded into writing features without tests. At least, I tried to program as testable as I know how to. Add ing tests is my absolute priority at this point.
+Oh, the tests I had planned! Ever since attending a lecture on TDD some years ago, I’ve known that it’s the way to go. I did start with setting up a test suite and writing a test. But not sure about having the time to produce a playable game, I renegaded into writing features without tests. At least, I tried to program as testable as I know how to. Writing unit tests is my absolute priority at this point.
 
 ### Controls
 Press enter to start and restart game. Use arrow keys to move. Press space to fire.
