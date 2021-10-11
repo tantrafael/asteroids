@@ -77,7 +77,6 @@ public class GameManager : MonoBehaviour
 
 	public void StartGame()
 	{
-		//this.playerShip = this.SpawnPlayerShip();
 		GameObject playerShipInstance = this.SpawnPlayerShip();
 		this.playerShip = playerShipInstance.GetComponent<PlayerShip>();
 		this.asteroidManager.SpawnAsteroids();
@@ -86,8 +85,6 @@ public class GameManager : MonoBehaviour
 
 	public void EndGame()
 	{
-		Debug.Log("GameManager.EndGame");
-
 		if (this.playerShip)
 		{
 			Destroy(this.playerShip.gameObject);

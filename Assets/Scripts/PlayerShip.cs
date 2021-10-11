@@ -80,7 +80,6 @@ public class PlayerShip : MonoBehaviour
 	{
 		Vector2 position = this.transform.position;
 		Vector2 velocity = this.shotSpeed * this.transform.up;
-		//Shot shot = this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
 		GameObject shotInstance = this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
 
 		return shotInstance;

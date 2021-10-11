@@ -9,15 +9,18 @@ public class AsteroidManager : MonoBehaviour
 	private List<GameObject> asteroids = new List<GameObject>();
 	private int nrSpawningAsteroids = 5;
 	private int maxSize = 3;
-	private int nrSubAsteroids = 2;
+	private int subAsteroidsCount = 2;
 
 	private EventManager eventManager;
-
-	public int AsteroidCount { get; }
 
 	public void Initialize(EventManager eventManager)
 	{
 		this.eventManager = eventManager;
+	}
+
+	public int GetAsteroidCount()
+	{
+		return this.asteroids.Count;
 	}
 
 	public void SpawnAsteroids()
@@ -65,7 +68,7 @@ public class AsteroidManager : MonoBehaviour
 		{
 			int size = asteroid.Size - 1;
 
-			for (var i = 0; i < nrSubAsteroids; ++i)
+			for (var i = 0; i < subAsteroidsCount; ++i)
 			{
 				this.SpawnAsteroid(size, position);
 			}

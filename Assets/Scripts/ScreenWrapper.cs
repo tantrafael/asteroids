@@ -13,7 +13,7 @@ public class ScreenWrapper : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (this.mainCamera == null)
+		if (!this.mainCamera)
 		{
 			Debug.Log(this.gameObject);
 		}
