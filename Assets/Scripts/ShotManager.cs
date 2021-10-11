@@ -22,7 +22,7 @@ public class ShotManager : MonoBehaviour
 		this.shots = new List<GameObject>();
 	}
 
-	public void Shoot(ColliderType colliderType, Vector2 position, Vector2 velocity)
+	public GameObject Shoot(ColliderType colliderType, Vector2 position, Vector2 velocity)
 	{
 		Assert.IsNotNull(this.shotPrefab);
 
@@ -31,6 +31,8 @@ public class ShotManager : MonoBehaviour
 		Shot shot = shotInstance.GetComponent<Shot>();
 		shot.Initialize(colliderType, velocity, this.eventManager);
 		this.shots.Add(shotInstance);
+
+		return shotInstance;
 	}
 
 	// TODO: Consider handling this in a coroutine.

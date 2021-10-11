@@ -34,7 +34,7 @@ public class EnemyShipManager : MonoBehaviour
 		this.StartCoroutine(this.ControlEnemyShipSpawning(timeUntilSpawning));
 	}
 
-	public void SpawnEnemyShip()
+	public GameObject SpawnEnemyShip()
 	{
 		Assert.IsNotNull(this.mainCamera);
 		Assert.IsNotNull(this.enemyShipPrefab);
@@ -42,7 +42,7 @@ public class EnemyShipManager : MonoBehaviour
 		if (this.enemyShips.Count >= this.maxConcurrentEnemyShips)
 		{
 			Debug.LogWarning("Attempt to exceed allowed number of concurrent enemy ships.");
-			return;
+			return null;
 		}
 
 		int size = 1;
@@ -57,6 +57,8 @@ public class EnemyShipManager : MonoBehaviour
 		EnemyShip enemyShip = enemyShipInstance.GetComponent<EnemyShip>();
 		enemyShip.Initialize(size, difficulty, direction, this.eventManager, this.shotManager);
 		this.enemyShips.Add(enemyShipInstance);
+
+		return enemyShipInstance;
 	}
 
 	public void HandleEnemyShipHit(GameObject enemyShipInstance)

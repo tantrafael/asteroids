@@ -77,13 +77,17 @@ public class GameManager : MonoBehaviour
 
 	public void StartGame()
 	{
-		this.playerShip = this.SpawnPlayerShip();
+		//this.playerShip = this.SpawnPlayerShip();
+		GameObject playerShipInstance = this.SpawnPlayerShip();
+		this.playerShip = playerShipInstance.GetComponent<PlayerShip>();
 		this.asteroidManager.SpawnAsteroids();
 		this.enemyShipManager.ScheduleEnemyShip();
 	}
 
 	public void EndGame()
 	{
+		Debug.Log("GameManager.EndGame");
+
 		if (this.playerShip)
 		{
 			Destroy(this.playerShip.gameObject);
@@ -94,13 +98,13 @@ public class GameManager : MonoBehaviour
 		this.shotManager.ClearShots();
 	}
 
-	private PlayerShip SpawnPlayerShip()
+	public GameObject SpawnPlayerShip()
 	{
 		GameObject playerShipInstance = Instantiate(playerShipPrefab, Vector3.zero, Quaternion.identity);
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
 		playerShip.Initialize(this.eventManager, this.shotManager);
 
-		return playerShip;
+		return playerShipInstance;
 	}
 
 	private void HandleAsteroidHitByPlayerShot(object data)

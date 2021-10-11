@@ -13,6 +13,8 @@ public class AsteroidManager : MonoBehaviour
 
 	private EventManager eventManager;
 
+	public int AsteroidCount { get; }
+
 	public void Initialize(EventManager eventManager)
 	{
 		this.eventManager = eventManager;

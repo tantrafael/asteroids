@@ -15,9 +15,6 @@ public class PlayerShip : MonoBehaviour
 	public GameObject shotPrefab;
 	public float shotSpeed = 6.0f;
 
-	public delegate void CollisionAction(GameObject gameObject, GameObject other);
-	public static event CollisionAction OnCollision;
-
 	private Rigidbody2D body;
 	private Rotator rotator;
 	private EventManager eventManager;
@@ -47,7 +44,7 @@ public class PlayerShip : MonoBehaviour
 		this.HandleRotationInput();
 		this.HandleThrustInput();
 		this.HandleFireInput();
-		// Handle hyper space input.
+		// TODO: Handle hyper space input.
 	}
 
 	private void HandleRotationInput()
@@ -79,18 +76,13 @@ public class PlayerShip : MonoBehaviour
 		}
 	}
 
-	public void Shoot()
+	public GameObject Shoot()
 	{
 		Vector2 position = this.transform.position;
 		Vector2 velocity = this.shotSpeed * this.transform.up;
-		this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
-	}
+		//Shot shot = this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
+		GameObject shotInstance = this.shotManager.Shoot(ColliderType.PlayerShot, position, velocity);
 
-	private void OnTriggerEnter2D(Collider2D other)
-	{
-		if (OnCollision != null)
-		{
-			OnCollision(this.gameObject, other.gameObject);
-		}
+		return shotInstance;
 	}
 }
