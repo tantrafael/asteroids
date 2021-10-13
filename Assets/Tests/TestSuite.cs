@@ -44,7 +44,7 @@ public class TestSuite
 		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
 
 		// Act
-		int size = 3;
+		AsteroidSize size = AsteroidSize.Large;
 		Vector2 spawnPosition = Vector2.zero;
 		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, spawnPosition);
 		yield return new WaitForSeconds(0.1f);
@@ -61,7 +61,7 @@ public class TestSuite
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
 
 		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
-		int size = 3;
+		AsteroidSize size = AsteroidSize.Large;
 		Vector2 viewportPosition = new Vector2(0.5f, 0.75f);
 		Vector2 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
 		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, worldPosition);
@@ -82,7 +82,7 @@ public class TestSuite
 		{
 			Asteroid asteroid = instance.GetComponent<Asteroid>();
 
-			if (asteroid.Size == 2)
+			if (asteroid.Size == AsteroidSize.Medium)
 			{
 				mediumAsteroidCount++;
 			}
@@ -103,7 +103,7 @@ public class TestSuite
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
 
 		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
-		int size = 2;
+		AsteroidSize size = AsteroidSize.Medium;
 		Vector2 viewportPosition = new Vector2(0.5f, 0.75f);
 		Vector2 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
 		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, worldPosition);
@@ -124,7 +124,7 @@ public class TestSuite
 		{
 			Asteroid asteroid = instance.GetComponent<Asteroid>();
 
-			if (asteroid.Size == 1)
+			if (asteroid.Size == AsteroidSize.Small)
 			{
 				smallAsteroidCount++;
 			}
@@ -145,7 +145,7 @@ public class TestSuite
 		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
 
 		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
-		int size = 1;
+		AsteroidSize size = AsteroidSize.Small;
 		Vector2 viewportPosition = new Vector2(0.5f, 0.75f);
 		Vector2 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
 		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, worldPosition);

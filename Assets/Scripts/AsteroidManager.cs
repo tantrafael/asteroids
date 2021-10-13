@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AsteroidSize
+{
+	Small = 1,
+	Medium = 2,
+	Large = 3
+};
+
 public class AsteroidManager : MonoBehaviour
 {
 	public GameObject asteroidPrefab;
 
 	private List<GameObject> asteroids = new List<GameObject>();
 	private int spawningAsteroidCount = 5;
-	private int maxSize = 3;
 	private int subAsteroidsCount = 2;
 
 	private EventManager eventManager;
@@ -32,7 +38,7 @@ public class AsteroidManager : MonoBehaviour
 	{
 		for (var i = 0; i < spawningAsteroidCount; ++i)
 		{
-			int size = maxSize;
+			AsteroidSize size = AsteroidSize.Large;
 
 			// TODO: Position asteroids around the screen edges.
 			float angle = Random.value * 2 * Mathf.PI;
@@ -44,12 +50,12 @@ public class AsteroidManager : MonoBehaviour
 		}
 	}
 
-	public GameObject SpawnAsteroid(int size, Vector2 position)
+	public GameObject SpawnAsteroid(AsteroidSize size, Vector2 position)
 	{
 		float angle = Random.value * 2 * Mathf.PI;
 		Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		// TODO: Remove magic numbers.
-		float speed = Random.Range(2.0f, 3.0f) / size;
+		float speed = Random.Range(2.0f, 3.0f) / (int)size;
 		Vector2 velocity = speed * direction;
 
 		GameObject asteroidInstance = Instantiate(asteroidPrefab, position, Quaternion.identity);
@@ -69,9 +75,9 @@ public class AsteroidManager : MonoBehaviour
 		Destroy(asteroidInstance);
 
 		// TODO: Remove magic numbers.
-		if (asteroid.Size > 1)
+		if (asteroid.Size != AsteroidSize.Small)
 		{
-			int size = asteroid.Size - 1;
+			AsteroidSize size = asteroid.Size - 1;
 
 			for (var i = 0; i < subAsteroidsCount; ++i)
 			{
