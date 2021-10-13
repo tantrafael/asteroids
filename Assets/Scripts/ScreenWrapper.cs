@@ -13,11 +13,6 @@ public class ScreenWrapper : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (!this.mainCamera)
-		{
-			Debug.Log(this.gameObject);
-		}
-
 		Vector2 worldPosition = this.body.position;
 		Vector2 viewportPosition = this.mainCamera.WorldToViewportPoint(worldPosition);
 

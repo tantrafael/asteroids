@@ -7,7 +7,7 @@ public class AsteroidManager : MonoBehaviour
 	public GameObject asteroidPrefab;
 
 	private List<GameObject> asteroids = new List<GameObject>();
-	private int nrSpawningAsteroids = 5;
+	private int spawningAsteroidCount = 5;
 	private int maxSize = 3;
 	private int subAsteroidsCount = 2;
 
@@ -23,9 +23,14 @@ public class AsteroidManager : MonoBehaviour
 		return this.asteroids.Count;
 	}
 
+	public List<GameObject> GetAsteroids()
+	{
+		return this.asteroids;
+	}
+
 	public void SpawnAsteroids()
 	{
-		for (var i = 0; i < nrSpawningAsteroids; ++i)
+		for (var i = 0; i < spawningAsteroidCount; ++i)
 		{
 			int size = maxSize;
 

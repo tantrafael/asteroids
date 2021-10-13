@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -30,7 +31,7 @@ public class TestSuite
 		// Act
 		PlayerShip playerShip = this.gameManager.GetPlayerShip();
 
-
+		// Assert
 		UnityEngine.Assertions.Assert.IsNotNull(playerShip);
 
 		yield return null;
@@ -53,7 +54,7 @@ public class TestSuite
 	}
 
 	[UnityTest]
-	public IEnumerator Asteroid_hit_by_player_fire_breaks_into_two_smaller_asteroids()
+	public IEnumerator Large_asteroid_hit_by_player_fire_breaks_into_two_medium_asteroids()
 	{
 		// Arrange
 		GameObject playerShipInstance = this.gameManager.SpawnPlayerShip();
@@ -72,9 +73,95 @@ public class TestSuite
 
 		yield return new WaitForSeconds(0.1f);
 
-		// Assert
-		Assert.AreEqual(2, asteroidManager.GetAsteroidCount());
+		int asteroidCount = asteroidManager.GetAsteroidCount();
+		int mediumAsteroidCount = 0;
+
+		List<GameObject> asteroids = asteroidManager.GetAsteroids();
+
+		foreach (GameObject instance in asteroids)
+		{
+			Asteroid asteroid = instance.GetComponent<Asteroid>();
+
+			if (asteroid.Size == 2)
+			{
+				mediumAsteroidCount++;
+			}
+		}
 
 		Object.Destroy(playerShipInstance);
+
+		// Assert
+		Assert.AreEqual(2, asteroidCount);
+		Assert.AreEqual(2, mediumAsteroidCount);
+	}
+
+	[UnityTest]
+	public IEnumerator Medium_asteroid_hit_by_player_fire_breaks_into_two_small_asteroids()
+	{
+		// Arrange
+		GameObject playerShipInstance = this.gameManager.SpawnPlayerShip();
+		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
+
+		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
+		int size = 2;
+		Vector2 viewportPosition = new Vector2(0.5f, 0.75f);
+		Vector2 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
+		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, worldPosition);
+
+		// Act
+		GameObject shotInstance = playerShip.Shoot();
+		Rigidbody2D body = shotInstance.GetComponent<Rigidbody2D>();
+		body.position = worldPosition;
+
+		yield return new WaitForSeconds(0.1f);
+
+		int asteroidCount = asteroidManager.GetAsteroidCount();
+		int smallAsteroidCount = 0;
+
+		List<GameObject> asteroids = asteroidManager.GetAsteroids();
+
+		foreach (GameObject instance in asteroids)
+		{
+			Asteroid asteroid = instance.GetComponent<Asteroid>();
+
+			if (asteroid.Size == 1)
+			{
+				smallAsteroidCount++;
+			}
+		}
+
+		Object.Destroy(playerShipInstance);
+
+		// Assert
+		Assert.AreEqual(2, asteroidCount);
+		Assert.AreEqual(2, smallAsteroidCount);
+	}
+
+	[UnityTest]
+	public IEnumerator Small_asteroid_hit_by_player_fire_disappears()
+	{
+		// Arrange
+		GameObject playerShipInstance = this.gameManager.SpawnPlayerShip();
+		PlayerShip playerShip = playerShipInstance.GetComponent<PlayerShip>();
+
+		AsteroidManager asteroidManager = this.gameManager.GetAsteroidManager();
+		int size = 1;
+		Vector2 viewportPosition = new Vector2(0.5f, 0.75f);
+		Vector2 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
+		GameObject asteroidInstance = asteroidManager.SpawnAsteroid(size, worldPosition);
+
+		// Act
+		GameObject shotInstance = playerShip.Shoot();
+		Rigidbody2D body = shotInstance.GetComponent<Rigidbody2D>();
+		body.position = worldPosition;
+
+		yield return new WaitForSeconds(0.1f);
+
+		int asteroidCount = asteroidManager.GetAsteroidCount();
+
+		Object.Destroy(playerShipInstance);
+
+		// Assert
+		Assert.AreEqual(0, asteroidCount);
 	}
 }
