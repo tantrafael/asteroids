@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Events;
+
+public enum EnemyShipSize
+{
+	Small = 1,
+	Large = 2
+};
 
 public class EnemyShipManager : MonoBehaviour
 {
@@ -45,8 +50,8 @@ public class EnemyShipManager : MonoBehaviour
 			return null;
 		}
 
-		int size = 1;
 		float difficulty = Random.value;
+		EnemyShipSize size = (difficulty < 0.5f) ? EnemyShipSize.Large : EnemyShipSize.Small;
 		int direction = (Random.value > 0.5f) ? 1 : -1;
 		Vector2 viewportPosition = Vector2.zero;
 		viewportPosition.x = (direction == 1) ? 0.0f : 1.0f;

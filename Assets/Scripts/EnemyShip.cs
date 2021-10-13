@@ -5,7 +5,7 @@ public class EnemyShip : MonoBehaviour
 {
 	public float shotSpeed = 6.0f;
 
-	private int size;
+	private EnemyShipSize size;
 	private float difficulty;
 	private float speed;
 	private Vector2 direction;
@@ -26,7 +26,7 @@ public class EnemyShip : MonoBehaviour
 		this.StartCoroutine(this.ControlMovement());
 	}
 
-	public void Initialize(int size, float difficulty, int direction, EventManager eventManager, ShotManager shotManager)
+	public void Initialize(EnemyShipSize size, float difficulty, int direction, EventManager eventManager, ShotManager shotManager)
 	{
 		this.size = size;
 		this.difficulty = difficulty;
@@ -41,6 +41,8 @@ public class EnemyShip : MonoBehaviour
 		{
 			collisionDetector.Initialize(ColliderType.EnemyShip, this.eventManager);
 		}
+
+		this.transform.localScale = (int)this.size * Vector3.one;
 	}
 
 	private IEnumerator ControlShooting()
